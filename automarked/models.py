@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField
 from wtforms.fields.html5 import EmailField
-from wtforms.validators import InputRequired, Email, Length
+from wtforms.validators import InputRequired, Email, Length, EqualTo
 from automarked import db
 
 class User(db.Model):
@@ -51,8 +51,12 @@ class SignupForm(FlaskForm):
     password = PasswordField(
         'Password',
         validators=[InputRequired(), 
-        Length(min=6, max=32)]
+        Length(min=6, max=32),
+        EqualTo('confirm', message='Password doesn\'t match')]
         )
+    confirm = PasswordField(
+        'Confirm Password'
+    )
 
 db.create_all()
 db.session.commit()

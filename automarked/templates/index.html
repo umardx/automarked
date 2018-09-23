@@ -1,42 +1,27 @@
-{% extends "bootstrap/base.html" %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <link rel="icon" href="../static/img/favicon.png">
 
-{% block title %}
-Home
-{% endblock %}
+    <title>{{ title }}</title>
+    <link href="https://udx.web.id/static/automarked/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://udx.web.id/static/automarked/css/signin.css" rel="stylesheet">
+  </head>
 
-{% block styles %}
-{{super()}}
-<link rel="stylesheet" href="{{url_for('.static', filename='starter-template.css')}}">
-{% endblock %}
-
-{% block content %}
-    <nav class="navbar navbar-inverse navbar-fixed-top">
-      <div class="container">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="/">Automarked</a>
-        </div>
-        <div id="navbar" class="collapse navbar-collapse">
-          <ul class="nav navbar-nav">
-            <li class="active"><a href="/">Home</a></li>
-            <li><a href="{{ url_for('login') }}">Login</a></li>
-            <li><a href="{{ url_for('signup') }}">Sign Up</a></li>
-          </ul>
-        </div><!--/.nav-collapse -->
+  <body class="text-center">
+    <form class="form-signin" method="POST" action="/">
+      <img class="mb-4" src="../static/img/NETCONF.png" alt="" height="72">
+      {{ form.hidden_tag() }}
+      {{ form.username(class="form-control", placeholder="Username") }}
+      {{ form.password(class="form-control", placeholder="Password") }}
+      <div class="checkbox mb-3">
+        <label>
+          {{ form.remember() }} {{ form.remember.label }}
+        </label>
       </div>
-    </nav>
-
-    <div class="container">
-
-      <div class="starter-template">
-        <h1>Bootstrap starter template</h1>
-        <p class="lead">Use this document as a way to quickly start any new project.<br> All you get is this text and a mostly barebones HTML document.</p>
-      </div>
-
-    </div><!-- /.container -->
-{% endblock %}
+      <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+      <p class="mt-5 mb-3 text-muted">{{ app_name }}, Inc &copy; 2018—2019</p>
+    </form>
+  </body>
+</html>
