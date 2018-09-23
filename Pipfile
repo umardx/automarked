@@ -7,10 +7,13 @@ name = "pypi"
 flask = "*"
 flask-bootstrap = "*"
 flask-wtf = "*"
+flask-sqlalchemy = "*"
+pylint-flask = "*"
+pylint = "*"
 
 [dev-packages]
 python-dotenv = "*"
-pylint = "*"
+pylint-flask = "*"
 "autopep8" = "*"
 
 [requires]
