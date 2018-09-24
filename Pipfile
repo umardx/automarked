@@ -8,14 +8,13 @@ flask = "*"
 flask-bootstrap = "*"
 flask-wtf = "*"
 flask-sqlalchemy = "*"
-pylint-flask = "*"
-pylint = "*"
-flask-bcrypt = "*"
+flask-login = "*"
 
 [dev-packages]
 python-dotenv = "*"
-pylint-flask = "*"
 "autopep8" = "*"
+pylint-flask = "*"
+pylint = "*"
 
 [requires]
 python_version = "3.6"
