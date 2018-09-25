@@ -19,6 +19,11 @@
       {{ form.email(class="form-control", placeholder="Email") }}
       {{ form.password(class="form-control", placeholder="Password") }}
       {{ form.confirm(class="form-control", placeholder="Confirm") }}
+      <div class="checkbox mb-3">
+        <label>
+          {{ form.accept_tos() }} {{ form.accept_tos.label }}
+        </label>
+      </div>
       </div>
 
       {% if sign_err %}

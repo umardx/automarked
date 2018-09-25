@@ -2,7 +2,7 @@ from flask_wtf import FlaskForm
 from flask_login import UserMixin
 from wtforms import StringField, PasswordField, BooleanField
 from wtforms.fields.html5 import EmailField
-from wtforms.validators import InputRequired, Email, Length, EqualTo
+from wtforms.validators import InputRequired, DataRequired, Email, Length, EqualTo
 from automarked import db
 
 class User(UserMixin, db.Model):
@@ -66,6 +66,16 @@ class SignupForm(FlaskForm):
     confirm = PasswordField(
         'Confirm Password'
     )
+    accept_tos = BooleanField(
+        'I accept the TOS',
+        validators=[DataRequired()]
+    )
+
+class err_msg(object):
+    def __init__(self, title, message, category):
+        self.title = title
+        self.message = message
+        self.category = category
 
 db.create_all()
 db.session.commit()

@@ -3,18 +3,16 @@ from flask import render_template, redirect, url_for, request, flash
 from flask_login import login_required, login_user, current_user, logout_user
 from automarked import app, db, login_manager
 from werkzeug.security import generate_password_hash, check_password_hash
-from automarked.models import LoginForm, SignupForm, User
+from automarked.models import err_msg, LoginForm, SignupForm, User
 
 
 def getAppName():
-    try:
-        app_name = str(environ.get('APP_NAME'))
-    except:
-        app_name = 'Automarked'
+    app_name = str(environ.get('APP_NAME'))
     return app_name
 
 # Set log in view
 login_manager.login_view = 'login'
+
 # Load user from User models
 @login_manager.user_loader
 def load_user(user_id):
@@ -62,15 +60,22 @@ def signup():
     form = SignupForm()
 
     if form.validate_on_submit():
-        new_user = User(
-            username = form.username.data,
-            email = form.email.data,
-            isActive = True,
-            password = generate_password_hash(form.password.data, method='sha256')
-        )
-        db.session.add(new_user)
-        db.session.commit()
-        sign_msg = 'Account has been created!'
+        username = User.query.filter_by(username=form.username.data).first()
+        email = User.query.filter_by(email=form.email.data).first()
+        if username:
+            sign_err = 'You\'re idiot! The username is already registered.'
+        elif email:
+            sign_err = 'You\'re idiot! The email is already registered.'
+        else:
+            new_user = User(
+                username = form.username.data,
+                email = form.email.data,
+                isActive = True,
+                password = generate_password_hash(form.password.data, method='sha256')
+            )
+            db.session.add(new_user)
+            db.session.commit()
+            sign_msg = 'Account has been created!'
 
     return render_template('signup.html',form=form, title=title, app_name=app_name, sign_msg=sign_msg, sign_err=sign_err)
 
