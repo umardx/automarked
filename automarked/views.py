@@ -68,9 +68,9 @@ def signup():
             sign_err = 'You\'re idiot! The email is already registered.'
         else:
             new_user = User(
+                isActive = True,
                 username = form.username.data,
                 email = form.email.data,
-                isActive = True,
                 password = generate_password_hash(form.password.data, method='sha256')
             )
             db.session.add(new_user)

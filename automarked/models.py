@@ -16,7 +16,7 @@ class User(UserMixin, db.Model):
         nullable=False
     )
     username = db.Column(
-        db.String(20),
+        db.String(32),
         nullable=False,
         unique=True
         )
@@ -34,7 +34,7 @@ class LoginForm(FlaskForm):
     username = StringField(
         'Username',
         validators=[InputRequired(),
-        Length(min=4, max=20)
+        Length(min=4, max=32)
         ])
     password = PasswordField(
         'Password',
@@ -55,7 +55,7 @@ class SignupForm(FlaskForm):
     username = StringField(
         'Username',
         validators=[InputRequired(),
-        Length(min=4, max=20)]
+        Length(min=4, max=32)]
         )
     password = PasswordField(
         'Password',
@@ -67,7 +67,7 @@ class SignupForm(FlaskForm):
         'Confirm Password'
     )
     accept_tos = BooleanField(
-        'I accept the TOS',
+        'I accept the term of services',
         validators=[DataRequired()]
     )
 
