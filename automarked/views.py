@@ -1,14 +1,9 @@
-from os import environ
-from flask import render_template, redirect, url_for, request, flash
-from flask_login import login_required, login_user, current_user, logout_user
-from automarked import app, db, login_manager
-from werkzeug.security import generate_password_hash, check_password_hash
-from automarked.models import err_msg, LoginForm, SignupForm, User
+from flask              import render_template, redirect, url_for, request, flash
+from flask_login        import login_required, login_user, current_user, logout_user
+from automarked         import app, db, login_manager, app_name
+from werkzeug.security  import generate_password_hash, check_password_hash
+from automarked.models  import LoginForm, SignupForm, ForgotEmailForm, User, ChangePasswordForm
 
-
-def getAppName():
-    app_name = str(environ.get('APP_NAME'))
-    return app_name
 
 # Set log in view
 login_manager.login_view = 'login'
@@ -28,67 +23,93 @@ def index():
 # Login route
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    app_name = getAppName()
+    if current_user.is_authenticated:
+        return redirect(url_for('dashboard'))
     title = 'Login — ' + app_name
-    sign_err = None
-    sign_msg = None
     form = LoginForm()
-    if request.method == 'POST':
-        if form.validate_on_submit():
-            user = User.query.filter_by(username=form.username.data).first()
-            if user and check_password_hash(user.password, form.password.data):
-                sign_msg = 'You were successfully logged in'
-                login_user(user, remember=form.remember.data)
-            else:
-                sign_err = 'Get the fuck out here!'
-    return render_template('login.html', form=form, title=title, app_name=app_name, sign_msg=sign_msg, sign_err=sign_err)
+    if request.method == 'POST' and form.validate_on_submit():
+        user = User.query.filter_by(username=form.username.data).first()
+        if user and user.isActive and check_password_hash(user.password, form.password.data):
+            flash(u'You were successfully logged in, as ' + user.username, 'success')
+            login_user(user, remember=form.remember.data)
+            return redirect(url_for('dashboard'))
+        else:
+            flash(u'Invalid credentials.', 'error')
+    return render_template('login.html', form=form, title=title)
 
+@app.route('/forgot_password')
+def forgot_password():
+    form = ForgotEmailForm()
+    return render_template('forgot.html', form=form)
 
-@app.route("/logout")
+# Logout route
+@app.route('/logout')
 @login_required
 def logout():
     logout_user()
+    flash(u'You have been successfully logged out.', 'success')
     return redirect(url_for('index'))
 
 # Signup route
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
-    app_name = getAppName()
+    _err = None
+    if current_user.is_authenticated:
+        return redirect(url_for('dashboard'))
     title = 'Signup — ' + app_name
-    sign_err = None
-    sign_msg = None
     form = SignupForm()
 
-    if form.validate_on_submit():
+    if request.method == 'POST' and form.validate_on_submit():
         username = User.query.filter_by(username=form.username.data).first()
         email = User.query.filter_by(email=form.email.data).first()
         if username:
-            sign_err = 'You\'re idiot! The username is already registered.'
+            _err = 'The username is already registered.'
         elif email:
-            sign_err = 'You\'re idiot! The email is already registered.'
+            _err = 'The email is already registered.'
         else:
             new_user = User(
-                isActive = True,
+                isActive = form.accept_tos.data,
                 username = form.username.data,
                 email = form.email.data,
                 password = generate_password_hash(form.password.data, method='sha256')
             )
             db.session.add(new_user)
             db.session.commit()
-            sign_msg = 'Account has been created!'
+            flash(u'You account has been created.', 'success')
+            return redirect(url_for('index'))
 
-    return render_template('signup.html',form=form, title=title, app_name=app_name, sign_msg=sign_msg, sign_err=sign_err)
+    return render_template('signup.html',form=form, title=title, _err=_err)
 
 # Dashboard route
 @app.route('/dashboard')
 @login_required
 def dashboard():
-    app_name = getAppName()
-    title = 'Dashboard — ' + app_name
-    return render_template('dashboard.html', title=title, app_name=app_name)
+    title = 'Dashboard'
+    userProfileForm = ChangePasswordForm()
+    return render_template('dashboard.html', title=title, app_name=app_name, userProfileForm=userProfileForm)
+
+@app.route('/dashboard/change_password', methods=['GET','POST'])
+@login_required
+def dashboard_change_password():
+    form = ChangePasswordForm(request.form)
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            user = current_user
+            user.password = generate_password_hash(form.password.data, method='sha256')
+            db.session.add(user)
+            db.session.commit()
+            flash(u'You have been successfully changes your password.', 'success')
+        else:
+            for field in form.errors:
+                for err in form.errors[field]:
+                    flash(u'Can\'t change your password. ' + err, 'error')
+                    break
+    return redirect(url_for('dashboard'))
 
 # TODO
-# [ ] register unique username or email
+# [x] register unique username or email
 # [x] flask session
 # [ ] flask security 
+# [ ] create dashboard layout
+# [ ] ncclient https://ncclient.readthedocs.io/en/latest/
 # Ref: https://www.youtube.com/watch?v=8aTnmsDMldY&t=1397s

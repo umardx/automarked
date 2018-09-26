@@ -3,3 +3,4 @@
 .env
 Pipfile.lock
 *.sqlite3
+config.py
