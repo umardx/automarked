@@ -99,16 +99,16 @@
                             <a href="#"><i class="fa fa-server fa-fw"></i> Device<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
                                 <li>
-                                    <a href="#"><i class="fa fa-plus-square fa-fw"></i> Add Device</a>
+                                    <a href="{{ url_for('add_device') }}"><i class="fa fa-plus-square fa-fw"></i> Add Device</a>
                                 </li>
                                 <li>
-                                    <a href="#"><i class="fa fa-list-alt fa-fw"></i> List Device</a>
+                                    <a href="{{ url_for('list_device') }}"><i class="fa fa-list-alt fa-fw"></i> List Device</a>
                                 </li>
                             </ul>
                             <!-- /.nav-second-level -->
                         </li>
                         <li>
-                            <a href="#"><i class="fa fa-sitemap fa-fw"></i> YANG Explorer</a>
+                            <a href="{{ url_for('yang_explorer') }}"><i class="fa fa-sitemap fa-fw"></i> YANG Explorer</a>
                         </li>
                     </ul>
                 </div>
@@ -125,7 +125,7 @@
     </div>
     <!-- /#wrapper -->
 
-    <!-- Modal -->
+    <!-- Modal Profile -->
     <div class="modal fade" id="userProfile" tabindex="-1" role="dialog" aria-labelledby="userProfile" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -156,6 +156,30 @@
                     </form>
                     {% endif %}
                     </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary" form="formUserProfile">Save</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
+
+    <!-- Modal Profile -->
+    <div class="modal fade" id="settings" tabindex="-1" role="dialog" aria-labelledby="settings" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="settings">Settings</h4>
+                </div>
+                <div class="modal-body">
+                    ....<br>
+                    Settings here!<br>
+                    ....
+                </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                     <button type="submit" class="btn btn-primary" form="formUserProfile">Save</button>

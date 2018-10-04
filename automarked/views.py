@@ -2,7 +2,8 @@ from flask              import render_template, redirect, url_for, request, flas
 from flask_login        import login_required, login_user, current_user, logout_user
 from automarked         import app, db, login_manager, app_name
 from werkzeug.security  import generate_password_hash, check_password_hash
-from automarked.models  import LoginForm, SignupForm, ForgotEmailForm, User, ChangePasswordForm
+from automarked.models  import LoginForm, SignupForm, ForgotEmailForm, User, \
+                        ChangePasswordForm, AddDeviceForm
 
 
 # Set log in view
@@ -25,7 +26,7 @@ def index():
 def login():
     if current_user.is_authenticated:
         return redirect(url_for('dashboard'))
-    title = 'Login — ' + app_name
+    title = 'Login'
     form = LoginForm()
     if request.method == 'POST' and form.validate_on_submit():
         user = User.query.filter_by(username=form.username.data).first()
@@ -35,12 +36,13 @@ def login():
             return redirect(url_for('dashboard'))
         else:
             flash(u'Invalid credentials.', 'error')
-    return render_template('login.html', form=form, title=title)
+    return render_template('login.html', form=form, title=title, app_name=app_name)
 
 @app.route('/forgot_password')
 def forgot_password():
+    title = 'Forgot Password'
     form = ForgotEmailForm()
-    return render_template('forgot.html', form=form)
+    return render_template('forgot.html', form=form, title=title, app_name=app_name)
 
 # Logout route
 @app.route('/logout')
@@ -56,7 +58,7 @@ def signup():
     _err = None
     if current_user.is_authenticated:
         return redirect(url_for('dashboard'))
-    title = 'Signup — ' + app_name
+    title = 'Signup'
     form = SignupForm()
 
     if request.method == 'POST' and form.validate_on_submit():
@@ -78,7 +80,7 @@ def signup():
             flash(u'You account has been created.', 'success')
             return redirect(url_for('index'))
 
-    return render_template('signup.html',form=form, title=title, _err=_err)
+    return render_template('signup.html',form=form, title=title, _err=_err, app_name=app_name)
 
 # Dashboard route
 @app.route('/dashboard')
@@ -90,7 +92,7 @@ def dashboard():
 
 @app.route('/dashboard/change_password', methods=['GET','POST'])
 @login_required
-def dashboard_change_password():
+def change_password():
     form = ChangePasswordForm(request.form)
     if request.method == 'POST':
         if form.validate_on_submit():
@@ -105,6 +107,28 @@ def dashboard_change_password():
                     flash(u'Can\'t change your password. ' + err, 'error')
                     break
     return redirect(url_for('dashboard'))
+
+@app.route('/dashboard/add_device')
+@login_required
+def add_device():
+    title = 'Add Device'
+    userProfileForm = ChangePasswordForm()
+    addDeviceForm = AddDeviceForm()
+    return render_template('add_device.html', title=title, app_name=app_name, userProfileForm=userProfileForm, addDeviceForm=addDeviceForm)
+
+@app.route('/dashboard/list_device')
+@login_required
+def list_device():
+    title = 'List Device'
+    userProfileForm = ChangePasswordForm()
+    return render_template('list_device.html', title=title, app_name=app_name, userProfileForm=userProfileForm)
+
+@app.route('/dashboard/yang_explorer')
+@login_required
+def yang_explorer():
+    title = 'YANG Explorer'
+    userProfileForm = ChangePasswordForm()
+    return render_template('yangExplr.html', title=title, app_name=app_name, userProfileForm=userProfileForm)
 
 # TODO
 # [x] register unique username or email
