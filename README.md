@@ -3,7 +3,7 @@ Atomarked is a web based application for configuration and management of network
 This web application is development using python flask and its still in the development.
 
 ## Important file and folder structure
-```sh
+```
 $ tree automarked
 automarked
 |-- Pipfile
@@ -28,7 +28,7 @@ automarked
 $ git clone https://github.com/umardx/automarked.git
 ```
 2. Install pipenv via pip. To install pip, use the following [link](https://pip.pypa.io/en/stable/installing/) or by an easy way you think, as long as there is a `pip` on your OS.
-```bash
+```sh
 $ pip install pipenv
 ```
 3. Install environment
@@ -40,4 +40,11 @@ $ pipenv install --dev
 4. Run app
 ```bash
 $ pipenv run python run.py
+```
+
+## Docker
+For fast and simple testing/development deployment, you can use the prepared docker image from my dockerhub repository.
+```sh
+$ mkdir ${PWD}/database
+$ docker run -d --name automarked -v ${PWD}/database:/src/database -p 8000:8000/tcp umardx/automarked:latest
 ```

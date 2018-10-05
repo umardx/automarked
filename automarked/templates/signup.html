@@ -2,9 +2,9 @@
 {% block title %} {{ title }} {% endblock %}
 {% block content %}
 <div class="card card-register mx-auto mt-5">
-    <div class="card-header" style="background-color: #2777b5"><img class="mx-auto d-block" src="../static/img/logo.png" alt="{{ app_name }}" height="50"></div>
+    <div class="card-header" style="background-color: #2777b5"><img class="mx-auto d-block" src="{{ url_for('static', filename='img/logo.png') }}" alt="{{ app_name }}" height="50"></div>
     <div class="card-body">
-    <form method="POST" action="/signup">
+    <form method="POST" action="{{ url_for('signup') }}">
         {{ form.hidden_tag() }}
         <div class="form-group">
         </div>
@@ -69,8 +69,8 @@
         <button class="btn btn-info btn-block" type="submit">Register</button>
     </form>
     <div class="text-center">
-        <a class="d-block small mt-3" href="/login">Login Page</a>
-        <a class="d-block small" href="/forgot_password">Forgot Password?</a>
+        <a class="d-block small mt-3" href="{{ url_for('login') }}">Login Page</a>
+        <a class="d-block small" href="{{ url_for('forgot_password') }}">Forgot Password?</a>
     </div>
     </div>
 </div>

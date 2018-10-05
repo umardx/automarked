@@ -2,7 +2,7 @@ from flask              import render_template, redirect, url_for, request, flas
 from flask_login        import login_required, login_user, current_user, logout_user
 from automarked         import app, db, login_manager, app_name
 from werkzeug.security  import generate_password_hash, check_password_hash
-from automarked.models  import LoginForm, SignupForm, ForgotEmailForm, User, \
+from automarked.models  import LoginForm, SignupForm, ForgotEmailForm, Users, \
                         ChangePasswordForm, AddDeviceForm
 
 
@@ -12,7 +12,7 @@ login_manager.login_view = 'login'
 # Load user from User models
 @login_manager.user_loader
 def load_user(user_id):
-    return User.query.get(int(user_id))
+    return Users.query.get(int(user_id))
 
 # Home route
 @app.route('/')
@@ -29,7 +29,7 @@ def login():
     title = 'Login'
     form = LoginForm()
     if request.method == 'POST' and form.validate_on_submit():
-        user = User.query.filter_by(username=form.username.data).first()
+        user = Users.query.filter_by(username=form.username.data).first()
         if user and user.isActive and check_password_hash(user.password, form.password.data):
             flash(u'You were successfully logged in, as ' + user.username, 'success')
             login_user(user, remember=form.remember.data)
@@ -62,23 +62,16 @@ def signup():
     form = SignupForm()
 
     if request.method == 'POST' and form.validate_on_submit():
-        username = User.query.filter_by(username=form.username.data).first()
-        email = User.query.filter_by(email=form.email.data).first()
-        if username:
-            _err = 'The username is already registered.'
-        elif email:
-            _err = 'The email is already registered.'
-        else:
-            new_user = User(
-                isActive = form.accept_tos.data,
-                username = form.username.data,
-                email = form.email.data,
-                password = generate_password_hash(form.password.data, method='sha256')
-            )
-            db.session.add(new_user)
-            db.session.commit()
-            flash(u'You account has been created.', 'success')
-            return redirect(url_for('index'))
+        new_user = Users(
+            isActive = form.accept_tos.data,
+            username = form.username.data,
+            email = form.email.data,
+            password = generate_password_hash(form.password.data, method='sha256')
+        )
+        db.session.add(new_user)
+        db.session.commit()
+        flash(u'You account has been created.', 'success')
+        return redirect(url_for('index'))
 
     return render_template('signup.html',form=form, title=title, _err=_err, app_name=app_name)
 
@@ -108,12 +101,16 @@ def change_password():
                     break
     return redirect(url_for('dashboard'))
 
-@app.route('/dashboard/add_device')
+@app.route('/dashboard/add_device', methods = ['GET', 'POST'])
 @login_required
 def add_device():
     title = 'Add Device'
     userProfileForm = ChangePasswordForm()
     addDeviceForm = AddDeviceForm()
+    if request.method == 'POST':
+        if AddDeviceForm.validate_on_submit():
+            pass
+
     return render_template('add_device.html', title=title, app_name=app_name, userProfileForm=userProfileForm, addDeviceForm=addDeviceForm)
 
 @app.route('/dashboard/list_device')

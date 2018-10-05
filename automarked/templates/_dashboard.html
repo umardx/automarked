@@ -10,25 +10,25 @@
     <meta name="author" content="">
     <title>{% block title %}{% endblock %} | {{ app_name }}</title>
     <!-- Favicon -->
-    <link rel="shortcut icon" type="image/x-icon" href="../static/img/favicon.png">
+    <link rel="shortcut icon" type="image/x-icon" href="{{ url_for('static', filename='img/favicon.png') }}">
     <!-- icon in the highest resolution we need it for -->
-    <link rel="icon" sizes="192x192" href="../static/img/favicon.png">
+    <link rel="icon" sizes="192x192" href="{{ url_for('static', filename='img/favicon.png') }}">
     <!-- reuse same icon for Safari -->
-    <link rel="apple-touch-icon" href="../static/img/favicon.png">
+    <link rel="apple-touch-icon" href="{{ url_for('static', filename='img/favicon.png') }}">
     <!-- multiple icons for IE -->
-    <meta name="msapplication-square310x310logo" content="../static/img/favicon.png">
+    <meta name="msapplication-square310x310logo" content="{{ url_for('static', filename='img/favicon.png') }}">
     <!-- Chrome, Firefox OS and Opera -->
     <meta name="theme-color" content="#2777b5">
     <!-- Bootstrap Core CSS -->
-    <link href="../static/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
     <!-- MetisMenu CSS -->
-    <link href="../static/css/metisMenu.min.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/metisMenu.min.css') }}" rel="stylesheet">
     <!-- Custom CSS -->
-    <link href="../static/css/sb-admin.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/sb-admin.css') }}" rel="stylesheet">
     <!-- Custom Fonts -->
     <link href="https://blackrockdigital.github.io/startbootstrap-sb-admin-2/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet">
     <!-- Toastr Style -->
-    <link href="../static/css/toastr.min.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/toastr.min.css') }}" rel="stylesheet">
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -53,7 +53,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="{{ url_for('dashboard') }}"><img class="mx-auto d-block" src="../static/img/logo-inv.png" alt="{{ app_name }}" height="20"></a>
+                <a class="navbar-brand" href="{{ url_for('dashboard') }}"><img class="mx-auto d-block" src="{{ url_for('static', filename='img/logo-inv.png') }}" alt="{{ app_name }}" height="20"></a>
             </div>
             <!-- /.navbar-header -->
 
@@ -61,7 +61,7 @@
                 <!-- /.dropdown -->
                 <li class="dropdown">
                     <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                        <i class="fa fa-rocket fa-fw"></i> Account <i class="fa fa-caret-down"></i>
+                        <i class="fa fa-rocket fa-fw"></i> Account Settings <i class="fa fa-caret-down"></i>
                     </a>
                     <ul class="dropdown-menu dropdown-user">
                         <li><a data-toggle="modal" href="#userProfile"><i class="fa fa-user fa-fw"></i> Profile</a>
@@ -192,16 +192,16 @@
     <!-- /.modal -->
 
     <!-- jQuery -->
-    <script src="../static/js/jquery-3.3.1.min.js"></script>
+    <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
     <!-- Bootstrap Core JavaScript -->
-    <script src="../static/js/bootstrap.min.js"></script>
+    <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
     <!-- Metis Menu Plugin JavaScript -->
-    <script src="../static/js/metisMenu.min.js"></script>
+    <script src="{{ url_for('static', filename='js/metisMenu.min.js') }}"></script>
     <!-- Custom Theme JavaScript -->
-    <script src="../static/js/sb-admin.js"></script>
+    <script src="{{ url_for('static', filename='js/sb-admin.js') }}"></script>
     <!-- Toastr JS -->
-    <script src="../static/js/toastr.min.js"></script>
-    <script src="../static/js/automarked.js"></script>
+    <script src="{{ url_for('static', filename='js/toastr.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/automarked.js') }}"></script>
 
     {% with messages = get_flashed_messages(with_categories=True) %}
     {% if messages %}

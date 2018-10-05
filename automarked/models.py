@@ -4,10 +4,16 @@ from wtforms import StringField, PasswordField, BooleanField
 from wtforms.fields.html5 import EmailField, IntegerField
 from wtforms.validators import InputRequired, DataRequired, \
     Email, Length, EqualTo, Regexp, IPAddress, HostnameValidation, \
-    NumberRange
+    NumberRange, ValidationError
 from automarked import db
 
-class User(UserMixin, db.Model):
+class Users(UserMixin, db.Model):
+    """
+    Create an Users table
+    """
+
+    __tablename__ = 'users'
+
     id = db.Column(
         db.Integer,
         nullable=False,
@@ -32,6 +38,40 @@ class User(UserMixin, db.Model):
         nullable=False
         )
 
+class Devices(UserMixin, db.Model):
+    """
+    Create an Devices table
+    """
+
+    __tablename__ = 'devices'
+
+    id = db.Column(
+        db.Integer,
+        nullable=False,
+        primary_key=True
+        )
+    host = db.Column(
+        db.String(39),
+        nullable=False,
+        unique = True
+    )
+    port = db.Column(
+        db.Integer,
+        nullable=False
+        )
+    username = db.Column(
+        db.String(32),
+        nullable=False,
+        unique=True
+    )
+    password = db.Column(
+        db.String(80),
+        nullable=False
+    )
+    status = db.Column(
+        db.Boolean,
+        nullable=False
+    )
 
 class LoginForm(FlaskForm):
     username = StringField(
@@ -105,6 +145,13 @@ class SignupForm(FlaskForm):
         'I accept the term of services',
         validators=[DataRequired()]
     )
+
+    def validate_email(self, field):
+        if Users.query.filter_by(email=field.data).first():
+            raise ValidationError('The email is already registered.')
+    def validate_username(self, field):
+        if Users.query.filter_by(username=field.data).first():
+            raise ValidationError('The username is already registered.')
 
 class AddDeviceForm(FlaskForm):
     host = StringField(
