@@ -1,0 +1,68 @@
+{% extends '_auth.html' %}
+{% block title %} {{ title }} {% endblock %}
+
+{% block body %}
+<body class="login-page">
+    <div class="login-box">
+        <div class="logo">
+            <a href="{{ url_for('home.homepage') }}">Auto<b>MarKeD</b></a>
+            <small>Netconf Management</small>
+        </div>
+        <div class="card">
+            <div class="body">
+                <form id="sign_in" method="POST">
+                    {{ form.hidden_tag() }}
+                    <div class="msg">Sign in to start your session</div>
+                    {% if form.errors %}
+                        {% for field in form.errors %}
+                            {% if loop.index <= 1 %}
+                                {% for err in form.errors[field] %}
+                                <div class="alert alert-warning alert-dismissible" role="alert">
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                    <strong>Error on {{ field }}</strong><br/>
+                                    {{ err }}
+                                </div>
+                                {% endfor %}
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <i class="material-icons">person</i>
+                        </span>
+                        <div class="form-line">
+                            {{ form.username(class="form-control", placeholder="Username", autofocus=True) }}
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <i class="material-icons">lock</i>
+                        </span>
+                        <div class="form-line">
+                            {{ form.password(class="form-control", placeholder="Password") }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-8 p-t-5">
+                            {{ form.remember(class="filled-in chk-col-cyan", id="remember_me") }}
+                            <label for="remember_me">Remember Me</label>
+                        </div>
+                        <div class="col-xs-4">
+                            <button class="btn btn-block bg-cyan waves-effect" type="submit">SIGN IN</button>
+                        </div>
+                    </div>
+                    <div class="row m-t-15 m-b--20">
+                        <div class="col-xs-6">
+                            <a href="{{ url_for('auth.signup') }}">Register Now!</a>
+                        </div>
+                        <div class="col-xs-6 align-right">
+                            <a href="{{ url_for('auth.forgot') }}">Forgot Password?</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='js/pages/auth/sign-in.js') }}"></script>
+</body>
+{% endblock %}

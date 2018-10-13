@@ -1,0 +1,16 @@
+{% extends '_dashboard.html' %}
+{% block title %} {{ title }} {% endblock %}
+
+{% block content %}
+    <section class="content">
+        <div class="container-fluid">
+            <div class="block-header">
+                <h2>INDEX</h2>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+
+{% block addscript %}
+    <script src="{{ url_for('static', filename='js/pages/dashboard/active-dashboard.js') }}"></script>
+{% endblock %}

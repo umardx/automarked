@@ -1,0 +1,77 @@
+{% extends '_auth.html' %}
+{% block title %} {{ title }} {% endblock %}
+
+{% block body %}
+<body class="signup-page">
+    <div class="signup-box">
+        <div class="logo">
+            <a href="{{ url_for('home.homepage') }}">Auto<b>MarKeD</b></a>
+            <small>Netconf Management</small>
+        </div>
+        <div class="card">
+            <div class="body">
+                <form id="sign_up" method="POST">
+                    {{ form.hidden_tag() }}
+                    <div class="msg">Register a new account</div>
+                    {% if form.errors %}
+                        {% for field in form.errors %}
+                            {% if loop.index <= 1 %}
+                                {% for err in form.errors[field] %}
+                                <div class="alert alert-warning alert-dismissible" role="alert">
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                    <strong>Error on {{ field }}</strong><br/>
+                                    {{ err }}
+                                </div>
+                                {% endfor %}
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <i class="material-icons">person</i>
+                        </span>
+                        <div class="form-line">
+                            {{ form.username(class="form-control", placeholder="Username", autofocus=True) }}
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <i class="material-icons">email</i>
+                        </span>
+                        <div class="form-line">
+                            {{ form.email(class="form-control", placeholder="Email Address") }}
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <i class="material-icons">lock</i>
+                        </span>
+                        <div class="form-line">
+                            {{ form.password(class="form-control", placeholder="Password", minlength=6, maxlength=32) }}
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <i class="material-icons">lock</i>
+                        </span>
+                        <div class="form-line">
+                            {{ form.confirm(class="form-control", placeholder="Confirm", minlength=6, maxlength=32) }}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        {{ form.accept_tos(class="filled-in chk-col-cyan", id="terms") }}
+                        <label for="terms">I read and agree to the <a href="javascript:void(0);">terms of usage</a>.</label>
+                    </div>
+
+                    <button class="btn btn-block btn-lg bg-cyan waves-effect" type="submit">SIGN UP</button>
+
+                    <div class="m-t-25 m-b--5 align-center">
+                        <a href="{{ url_for('auth.signin') }}">You already have an account?</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='js/pages/auth/sign-up.js') }}"></script>
+</body>
+{% endblock %}

@@ -1,21 +1,11 @@
 FROM python:3.6-alpine
 
-EXPOSE 8000
-VOLUME [ "/src/database" ]
+WORKDIR /app
 
-ENV APP_NAME 'Automarked'
-ENV FLASK_ENV 'development'
+COPY . /app
 
-ADD . /src/
+RUN sh ./setup.sh
 
-RUN find /src/ -type d -exec chmod 755 {} \;
-RUN find /src/ -type f -exec chmod 644 {} \;
+ENTRYPOINT [ "/bin/sh" ]
 
-WORKDIR /src/
-
-RUN pip install pipenv
-RUN pipenv install
-
-ENTRYPOINT [ "pipenv", "run", "python" ]
-
-CMD [ "run.py" ]
+CMD [ "entrypoint.sh" ]

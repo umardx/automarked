@@ -1,0 +1,53 @@
+{% extends '_auth.html' %}
+{% block title %} {{ title }} {% endblock %}
+
+{% block body %}
+<body class="fp-page">
+    <div class="fp-box">
+        <div class="login-box">
+            <div class="logo">
+                <a href="{{ url_for('home.homepage') }}">Auto<b>MarKeD</b></a>
+                <small>Netconf Management</small>
+            </div>
+            <div class="card">
+                <div class="body">
+                    <form id="forgot_password" method="POST">
+                        {{ form.hidden_tag() }}
+                        <div class="msg">
+                            Enter your email address that you used to register.
+                            We'll send you an email with your username and a link to reset your password.
+                        </div>
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                <i class="material-icons">email</i>
+                            </span>
+                            <div class="form-line">
+                                {{ form.email(class="form-control", placeholder="Email", required=True, autofocus=True) }}
+                            </div>
+                        </div>
+                        {% if form.errors %}
+                            {% for field in form.errors %}
+                                {% if loop.index <= 1 %}
+                                    {% for err in form.errors[field] %}
+                                    <div class="alert alert-warning alert-dismissible" role="alert">
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                        <strong>Error on {{ field }}</strong><br/>
+                                        {{ err }}
+                                    </div>
+                                    {% endfor %}
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                        <button class="btn btn-block btn-lg bg-cyan waves-effect" type="submit">RESET MY PASSWORD</button>
+
+                        <div class="row m-t-20 m-b--5 align-center">
+                            <a href="{{ url_for('auth.signin') }}">Sign In!</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='js/pages/auth/forgot-password.js') }}"></script>
+</body>
+{% endblock %}

@@ -1,4 +1,7 @@
 .vscode
 .test
 .env
+.idea
+**/__pycache__
+migrations
 database

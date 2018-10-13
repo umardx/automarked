@@ -1,0 +1,86 @@
+{% extends '_dashboard.html' %}
+{% block title %} {{ title }} {% endblock %}
+
+{% block content %}
+    <section class="content">
+        <div class="container-fluid">
+            <div class="block-header">
+                <h2>ADD DEVICE</h2>
+            </div>
+            <!-- Vertical Layout | With Floating Label -->
+            <div class="row clearfix">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <div class="card">
+                            <div class="header">
+                                <h2>
+                                    DEVICE DETAILS
+                                </h2>
+                                <ul class="header-dropdown m-r--5">
+                                    <li class="dropdown">
+                                        <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                            <i class="material-icons">more_vert</i>
+                                        </a>
+                                        <ul class="dropdown-menu pull-right">
+                                            <li><a href="javascript:void(0);">Action</a></li>
+                                            <li><a href="javascript:void(0);">Another action</a></li>
+                                            <li><a href="javascript:void(0);">Something else here</a></li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="body">
+                                <form method="POST" action="{{ url_for('dashboard.add_device') }}">
+                                    {{ form_add_device.hidden_tag() }}
+                                    {% if form_add_device.errors %}
+                                        {% for field in form_add_device.errors %}
+                                            {% if loop.index <= 1 %}
+                                                {% for err in form_add_device.errors[field] %}
+                                                <div class="alert alert-warning alert-dismissible" role="alert">
+                                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                                    <strong>Error on {{ field }}</strong><br/>
+                                                    {{ err }}
+                                                </div>
+                                                {% endfor %}
+                                            {% endif %}
+                                        {% endfor %}
+                                    {% endif %}
+                                    <div class="form-group form-float">
+                                        <div class="form-line">
+                                            {{ form_add_device.host(class="form-control", id="host", autofocus=True) }}
+                                            <label class="form-label" for="host">{{ form_add_device.host.label }}</label>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group form-float">
+                                        <div class="form-line">
+                                            {{ form_add_device.port(class="form-control", id="port") }}
+                                            <label class="form-label" for="port">{{ form_add_device.port.label }}</label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-float">
+                                        <div class="form-line">
+                                            {{ form_add_device.username(class="form-control", id="username") }}
+                                            <label class="form-label" for="username">{{ form_add_device.username.label }}</label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-float">
+                                        <div class="form-line">
+                                            {{ form_add_device.password(class="form-control", id="password") }}
+                                            <label class="form-label" for="password">{{ form_add_device.password.label }}</label>
+                                        </div>
+                                    </div>  
+                                    <br>
+                                    <button type="submit" class="btn bg-cyan m-t-15 waves-effect">ADD</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Vertical Layout | With Floating Label -->
+        </div>
+    </section>
+{% endblock %}
+
+{% block addscript %}
+    <script src="{{ url_for('static', filename='js/pages/dashboard/active-add-device.js') }}"></script>
+{% endblock %}

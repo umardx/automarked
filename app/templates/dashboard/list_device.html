@@ -1,0 +1,76 @@
+{% extends '_dashboard.html' %}
+{% block title %} {{ title }} {% endblock %}
+
+{% block addcss %}
+    <!-- JQuery DataTable Css -->
+    <link href="{{ url_for('static', filename='plugins/jquery-datatable/skin/bootstrap/css/dataTables.bootstrap.css') }}" rel="stylesheet" type="text/css">
+{% endblock %}
+
+{% block content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="block-header">
+            <h2>
+                LIST DEVICE
+            </h2>
+        </div>
+        <!-- Basic Examples -->
+        <div class="row clearfix">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="card">
+                    <div class="header">
+                        <h2>
+                            DEVICES
+                        </h2>
+                        <ul class="header-dropdown m-r--5">
+                            <li class="dropdown">
+                                <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                    <i class="material-icons">more_vert</i>
+                                </a>
+                                <ul class="dropdown-menu pull-right">
+                                    <li><a href="javascript:void(0);">Action</a></li>
+                                    <li><a href="javascript:void(0);">Another action</a></li>
+                                    <li><a href="javascript:void(0);">Something else here</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-striped table-hover list-device dataTable">
+                                <thead>
+                                    <tr href="javascript:void(0);">
+                                        <th>Host</th>
+                                        <th>Port</th>
+                                        <th>Status</th>
+                                        <th>Last Check</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for device in devices %}
+                                    <tr>
+                                        <td>{{ device.host }}</td>
+                                        <td>{{ device.port }}</td>
+                                        <td>{{ 'Reacheble' if device.device_status.status else 'Unreachable' }}</td>
+                                        <td>{{ device.device_status.checked_time }} UTC</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- #END# Basic Examples -->
+    </div>
+</section>
+{% endblock %}
+
+{% block addscript %}
+    <script src="{{ url_for('static', filename='js/pages/dashboard/active-list-device.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/pages/dashboard/list_device.js') }}"></script>
+    <!-- Jquery DataTable Plugin Js -->
+    <script src="{{ url_for('static', filename='plugins/jquery-datatable/jquery.dataTables.js') }}"></script>
+    <script src="{{ url_for('static', filename='plugins/jquery-datatable/skin/bootstrap/js/dataTables.bootstrap.js') }}"></script>
+{% endblock %}

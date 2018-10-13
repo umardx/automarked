@@ -1,20 +1,17 @@
-[[source]]
-url = "https://pypi.org/simple"
-verify_ssl = true
-name = "pypi"
-
 [packages]
 flask = "==1.0.2"
 flask-wtf = "*"
 flask-sqlalchemy = "*"
 flask-login = "*"
 flask-migrate = "*"
+python-dotenv = "*"
 
 [dev-packages]
-python-dotenv = "*"
 "autopep8" = "*"
 pylint-flask = "*"
 pylint = "*"
+pytest = "*"
+faker = "*"
 
 [requires]
 python_version = "3.6"
