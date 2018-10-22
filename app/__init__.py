@@ -27,9 +27,11 @@ def create_app(config_name):
     from app.home import home as _home
     from app.auth import auth as _auth
     from app.dashboard import dashboard as _dashboard
+    from app.netconf import  netconf as _netconf
 
     app.register_blueprint(_home)
     app.register_blueprint(_auth, url_prefix='/auth')
     app.register_blueprint(_dashboard, url_prefix='/dashboard')
+    app.register_blueprint(_netconf, url_prefix='/dashboard/netconf')
 
     return app
