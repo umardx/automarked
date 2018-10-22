@@ -5,6 +5,9 @@ flask-sqlalchemy = "*"
 flask-login = "*"
 flask-migrate = "*"
 python-dotenv = "*"
+pyang = "*"
+pyangbind = "*"
+xmltodict = "*"
 
 [dev-packages]
 "autopep8" = "*"

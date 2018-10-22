@@ -1,0 +1,2 @@
+PYBINDPLUGIN=`python -c 'import pyangbind; import os; print ("{}/plugin".format(os.path.dirname(pyangbind.__file__)))'`
+alias pygen='pyang --plugindir $PYBINDPLUGIN -f pybind'
