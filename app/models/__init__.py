@@ -80,7 +80,8 @@ class DeviceStatus(UserMixin, db.Model):
     checked_time = db.Column(db.DateTime, nullable=False, default=datetime.now(timezone.utc))
 
     def __init__(self):
-        self.status = True
+        self.status = False
+        self.checked_time = datetime.now(timezone.utc)
 
     def __repr__(self):
         return '<Device Status: {}:{}>'.format(self.device_id, self.status)

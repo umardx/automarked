@@ -1,8 +1,5 @@
 #!/bin/sh
 
-echo '[PWD]'
-pwd
-
 cp ./.env.example ./.env
 
 echo '[pip install pipenv]'
