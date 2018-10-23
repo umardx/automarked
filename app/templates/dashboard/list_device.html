@@ -51,8 +51,8 @@
                                     <tr>
                                         <td>{{ device.host }}</td>
                                         <td>{{ device.port }}</td>
-                                        <td>{{ 'Reacheble' if device.device_status.status else 'Unreachable' }}</td>
-                                        <td><time datetime="{{ device.device_status.checked_time }}"></time></td>
+                                        <td><status status="{{ device.device_status.status }}"></status></td>
+                                        <td><checked_time datetime="{{ device.device_status.checked_time }}"></checked_time></td>
                                     </tr>
                                     {% endfor %}
                                 </tbody>

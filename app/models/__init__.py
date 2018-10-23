@@ -2,7 +2,7 @@ from flask_login import UserMixin
 from app import db, login_manager
 from werkzeug.security import generate_password_hash, \
     check_password_hash
-from _datetime import datetime
+from _datetime import datetime, timezone
 
 
 class Users(UserMixin, db.Model):
@@ -77,10 +77,10 @@ class DeviceStatus(UserMixin, db.Model):
     id = db.Column(db.Integer, nullable=False, primary_key=True)
     device_id = db.Column(db.Integer, db.ForeignKey('devices.id'))
     status = db.Column(db.Boolean, nullable=False, default=False)
-    checked_time = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    checked_time = db.Column(db.DateTime, nullable=False, default=datetime.now(timezone.utc))
 
     def __init__(self):
-        self.status = False
+        self.status = True
 
     def __repr__(self):
         return '<Device Status: {}:{}>'.format(self.device_id, self.status)
