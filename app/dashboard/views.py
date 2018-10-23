@@ -5,6 +5,7 @@ from app.dashboard import dashboard
 from app.dashboard.forms import add_device_form
 from app import db
 from app.models import Devices
+from _datetime import datetime
 
 
 @dashboard.route('/')
@@ -51,6 +52,13 @@ def list_device():
     """
     Handle requests to the /dashboard/list_device route
     User can list netconf device
+    moment('2018-10-22 11:03:24.422888','YYYY-MM-DD hh:mm:ss.SSSSSS').fromNow();
     """
     device_list = Devices.query.all()
     return render_template('dashboard/list_device.html', title='List Device | Dashboard', devices=device_list)
+
+
+@dashboard.route('/time')
+@login_required
+def time():
+    return str('Hellow World')
