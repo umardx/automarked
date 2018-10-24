@@ -3,6 +3,7 @@ from app import db, login_manager
 from werkzeug.security import generate_password_hash, \
     check_password_hash
 from _datetime import datetime, timezone
+import socket
 
 
 class Users(UserMixin, db.Model):
@@ -60,10 +61,13 @@ class Devices(UserMixin, db.Model):
         self.port = port
         self.username = username
         self.password = password
-        self.device_status = DeviceStatus()
+        self.update_status()
 
     def __repr__(self):
         return '<Device: {}:{} | {}>'.format(self.host, self.port, self.device_status.status)
+
+    def update_status(self):
+        self.device_status = DeviceStatus(self.host, self.port)
 
 
 class DeviceStatus(UserMixin, db.Model):
@@ -79,9 +83,23 @@ class DeviceStatus(UserMixin, db.Model):
     status = db.Column(db.Boolean, nullable=False, default=False)
     checked_time = db.Column(db.DateTime, nullable=False, default=datetime.now(timezone.utc))
 
-    def __init__(self):
-        self.status = False
+    def __init__(self, host, port):
+        self.status = self.is_open(host, port)
         self.checked_time = datetime.now(timezone.utc)
 
     def __repr__(self):
         return '<Device Status: {}:{}>'.format(self.device_id, self.status)
+
+    @staticmethod
+    def is_open(host, port):
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        sock.settimeout(1)
+
+        try:
+            sock.connect((host, port))
+            sock.shutdown(socket.SHUT_RDWR)
+            return True
+        except:
+            return False
+        finally:
+            sock.close()

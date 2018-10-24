@@ -60,7 +60,8 @@ def list_device():
     return render_template('dashboard/list_device.html', title='List Device | Dashboard', devices=device_list)
 
 
-@dashboard.route('/time')
+@dashboard.route('/check_status/<int:device_id>', methods=['POST'])
 @login_required
-def time():
+def check_status():
+        
     return str('Hellow World')

@@ -8,18 +8,18 @@ from app.dashboard.netconf import netconf
 @login_required
 def index():
 
-    return ''
+    return 'index'
 
 
 @netconf.route('/config')
 @login_required
 def config():
 
-    return ''
+    return 'config'
 
 
 @netconf.route('/operation')
 @login_required
 def operation():
 
-    return ''
+    return 'operation'
