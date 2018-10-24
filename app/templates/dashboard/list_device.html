@@ -14,7 +14,7 @@
                 LIST DEVICE
             </h2>
         </div>
-        <!-- Basic Examples -->
+        <!-- Device List -->
         <div class="row clearfix">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <div class="card">
@@ -28,9 +28,8 @@
                                     <i class="material-icons">more_vert</i>
                                 </a>
                                 <ul class="dropdown-menu pull-right">
-                                    <li><a href="javascript:void(0);">Action</a></li>
-                                    <li><a href="javascript:void(0);">Another action</a></li>
-                                    <li><a href="javascript:void(0);">Something else here</a></li>
+                                    <li><a href="{{ url_for('dashboard.add_device') }}">Add Device</a></li>
+                                    <li><a href="javascript:void(0);" onclick="location.href='{{ url_for('dashboard.list_device', action='refresh_all') }}'">Refresh All</a></li>
                                 </ul>
                             </li>
                         </ul>
@@ -43,16 +42,33 @@
                                         <th>Host</th>
                                         <th>Port</th>
                                         <th>Status</th>
-                                        <th>Last Check</th>
+                                        <th>Last Checked</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {% for device in devices %}
                                     <tr>
-                                        <td>{{ device.host }}</td>
+                                        <td id="{{ device.id }}" width="50%">{{ device.host }}
+                                            <div class="btn-group bg-cyan btn-group-xs pull-right" role="group" aria-label="Extra-small button group">
+                                                <button type="button" onclick="location.href='{{ url_for('dashboard.list_device', action='delete', device_id=device.id) }}'" title="Delete" class="btn bg-cyan waves-effect waves-light">
+                                                    <i class="material-icons">delete</i></button>
+                                                <button type="button" onclick="getId({{ device.id }});location.href='#editDevice'; " title="Edit" class="btn bg-cyan waves-effect waves-light">
+                                                    <i class="material-icons">edit</i></button>
+                                                <button type="button" onclick="location.href='{{ url_for('dashboard.list_device', action='refresh', device_id=device.id) }}'" title="Refresh" class="btn bg-cyan waves-effect waves-light">
+                                                    <i class="material-icons">autorenew</i></button>
+                                                <button type="button" onclick="location.href='{{ url_for('dashboard.list_device', action='telemetry', device_id=device.id) }}'" title="Telemetry" class="btn bg-cyan waves-effect waves-light">
+                                                    <i class="material-icons">info_outline</i></button>
+                                                <button type="button" onclick="location.href='{{ url_for('dashboard.list_device', action='netconf', device_id=device.id) }}'" title="Config Netconf" class="btn bg-cyan waves-effect waves-light">
+                                                    <i class="material-icons">send</i></button>
+                                            </div>
+                                        </td>
                                         <td>{{ device.port }}</td>
-                                        <td><status status="{{ device.device_status.status }}"></status></td>
-                                        <td><checked_time datetime="{{ device.device_status.checked_time }}"></checked_time></td>
+                                        <td><status status="{{ device.device_status.status }}">
+                                            <span class="hidden">{{ device.device_status.status }}</span></status>
+                                        </td>
+                                        <td><checked_time datetime="{{ device.device_status.checked_time }}">
+                                            <span class="hidden">{{ device.device_status.checked_time }}</span></checked_time>
+                                        </td>
                                     </tr>
                                     {% endfor %}
                                 </tbody>
@@ -62,7 +78,62 @@
                 </div>
             </div>
         </div>
-        <!-- #END# Basic Examples -->
+        <!-- #END# Device List -->
+        <!-- Modal Device List-->
+        <div class="remodal" data-remodal-id="editDevice">
+            <div class="modal-header">
+                <h2>EDIT DEVICE</h2>
+            </div>
+            <form method="POST" action="{{ url_for('dashboard.list_device') }}">
+                <div class="form-group form-float">
+                    {{ form_edit_device.hidden_tag() }}
+                    {% if form_edit_device.errors %}
+                        {% for field in form_edit_device.errors %}
+                            {% if loop.index <= 1 %}
+                                {% for err in form_edit_device.errors[field] %}
+                                <div class="alert alert-warning alert-dismissible" role="alert">
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                    <strong>Error on {{ field }}</strong><br/>
+                                    {{ err }}
+                                </div>
+                                {% endfor %}
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
+                </div>
+                <div class="form-group form-float">
+                    <div class="form-line">
+                        {{ form_edit_device.id(readonly=True, hidden=True) }}
+                        {{ form_edit_device.host(class="form-control", readonly=True) }}
+                        <label class="form-label" for="host">{{ form_edit_device.host.label }}</label>
+                    </div>
+                </div>
+
+                <div class="form-group form-float">
+                    <div class="form-line">
+                        {{ form_edit_device.port(class="form-control") }}
+                        <label class="form-label" for="port">{{ form_edit_device.port.label }}</label>
+                    </div>
+                </div>
+                <div class="form-group form-float">
+                    <div class="form-line">
+                        {{ form_edit_device.username(class="form-control") }}
+                        <label class="form-label" for="username">{{ form_edit_device.username.label }}</label>
+                    </div>
+                </div>
+                <div class="form-group form-float">
+                    <div class="form-line">
+                        {{ form_edit_device.password(class="form-control") }}
+                        <label class="form-label" for="password">{{ form_edit_device.password.label }}</label>
+                    </div>
+                </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default waves-effect" data-remodal-action="close" class="remodal-close">CLOSE</button>
+                <button type="submit" class="btn btn-primary waves-effect">SAVE</button>
+            </div>
+            </form>
+        </div>
+        <!-- #END Modal Device List-->
     </div>
 </section>
 {% endblock %}
@@ -72,6 +143,10 @@
     <script src="{{ url_for('static', filename='js/pages/dashboard/list_device.js') }}"></script>
     <!-- Jquery DataTable Plugin Js -->
     <script src="{{ url_for('static', filename='plugins/momentjs/moment.js') }}"></script>
+    <script src="{{ url_for('static', filename='plugins/momentjs/tz.js') }}"></script>
     <script src="{{ url_for('static', filename='plugins/jquery-datatable/jquery.dataTables.js') }}"></script>
     <script src="{{ url_for('static', filename='plugins/jquery-datatable/skin/bootstrap/js/dataTables.bootstrap.js') }}"></script>
+    {% if device_id %}
+    <script>getId({{ device_id }})</script>
+    {% endif %}
 {% endblock %}

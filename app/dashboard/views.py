@@ -1,12 +1,12 @@
-from flask import flash, render_template, request
-from flask_login import login_required
+from flask import flash, redirect, url_for, \
+    render_template, request, jsonify
+from flask_login import login_required, current_user
 
 from app.dashboard import dashboard
-from app.dashboard.forms import add_device_form
+from app.dashboard.forms import add_device_form, edit_device_form
+from app.tasks import refresh_all_device
 from app import db
 from app.models import Devices
-from datetime import datetime
-from dateutil import tz
 
 
 @dashboard.route('/')
@@ -16,7 +16,6 @@ def index():
     Handle requests to the /dashboard/ route
     Show dashboard display
     """
-    
     return render_template('dashboard/index.html', title='Dashboard')
 
 
@@ -42,9 +41,13 @@ def add_device():
             db.session.commit()
             flash(u'The device was successfully added.', 'success')
         except Exception as e:
-            flash(u'Can\'t add account to the database. ' + str(e), 'error')
+            flash(u'Can\'t add device to the database. ' + str(e), 'error')
 
-    return render_template('dashboard/add_device.html', title='Add Device | Dashboard', form_add_device=form_add_device)
+    return render_template(
+        'dashboard/add_device.html',
+        title='Add Device | Dashboard',
+        form_add_device=form_add_device
+    )
 
 
 @dashboard.route('/list_device', methods=['GET', 'POST'])
@@ -55,12 +58,144 @@ def list_device():
     User can list netconf device
     moment('2018-10-22 11:03:24.422888','YYYY-MM-DD hh:mm:ss.SSSSSS').fromNow();
     """
+    form_edit_device = edit_device_form()
 
-    device_list = Devices.query.all()
-    return render_template('dashboard/list_device.html', title='List Device | Dashboard', devices=device_list)
+    if request.method == 'POST':
+        _id = request.form['id']
+
+        if form_edit_device.validate_on_submit():
+            _device = Devices(
+                host=form_edit_device.host.data,
+                port=form_edit_device.port.data,
+                username=form_edit_device.username.data,
+                password=form_edit_device.password.data
+            )
+
+            edit(_device, _id)
+
+        else:
+            for field in form_edit_device.errors:
+                _error = 'Field ' + str(field) + ': ' + str(
+                    form_edit_device.errors[field])\
+                    .replace("['", "").replace("']", "")
+
+                flash(u'' + _error, 'warning')
+
+            return redirect(url_for(
+                'dashboard.list_device',
+                device_id=_id
+            ) + '#editDevice')
+
+    action = request.args.get('action')
+    device_id = request.args.get('device_id')
+
+    if action == 'refresh':
+        refresh(device_id)
+        return redirect(url_for('dashboard.list_device'))
+    elif action == 'refresh_all':
+        refresh_all()
+        return redirect(url_for('dashboard.list_device'))
+    elif action == 'delete':
+        delete(device_id)
+        return redirect(url_for('dashboard.list_device'))
+    elif action == 'telemetry':
+        return redirect(url_for('dashboard.list_device'))
+    elif action == 'netconf':
+        return redirect(url_for('dashboard.index'))
+
+    return render_template(
+        'dashboard/list_device.html',
+        title='List Device | Dashboard',
+        form_edit_device=form_edit_device,
+        devices=Devices.query.filter_by(
+            user_id=current_user.id
+        ).all(),
+        device_id=device_id
+    )
 
 
-@dashboard.route('/time')
 @login_required
-def time():
-    return str('Hellow World')
+def refresh(id):
+    _device = Devices.query.filter_by(id=id).first()
+    _device.update_status()
+
+    try:
+        db.session.commit()
+        flash(
+            u'The device was successfully refreshed.',
+            'success'
+        )
+    except Exception as e:
+        flash(u'Can\'t refresh the device. ' + str(e), 'error')
+
+
+@login_required
+def refresh_all():
+    refresh_all_device.delay(current_user.id)
+    flash(
+        u'All devices are being refreshed.',
+        'success'
+    )
+
+
+@login_required
+def delete(id):
+    _device = Devices.query.filter_by(id=id).first()
+
+    try:
+        db.session.delete(_device)
+        db.session.commit()
+        flash(u'You were successfully deleted the device.', 'success')
+    except Exception as e:
+        flash(u'Can\'t delete device. ' + str(e), 'error')
+
+
+@login_required
+def edit(device, id):
+    try:
+        _device = Devices.query.filter_by(id=id).first()
+        _device.update(
+            port=device.port,
+            username=device.username,
+            password=device.password
+        )
+        db.session.commit()
+        flash(u'The device was successfully updated', 'success')
+    except AttributeError as e:
+        flash(u'Can\'t determine the device. ' + str(e), 'error')
+    except Exception as e:
+        flash(u'Can\'t update the device. ' + str(e), 'error')
+
+
+# Endpoint for edit device
+@dashboard.route('/device/<id>')
+@login_required
+def device(id):
+    data = dict()
+    _device = Devices.query.filter_by(id=id).first()
+    if _device is not None:
+        data['id'] = _device.id
+        data['host'] = _device.host
+        data['port'] = _device.port
+        data['username'] = _device.username
+        data['password'] = _device.password
+
+    return jsonify(data)
+
+
+# Route for netconf
+@dashboard.route('/netconf', defaults={'device_id': None})
+@dashboard.route('/netconf/<device_id>')
+@login_required
+def netconf(device_id):
+    """
+    Handle requests to the /dashboard/netconf route
+    Show netconf dashboard display
+    """
+    if device_id is not None:
+        print(device_id)
+
+    return render_template(
+        'dashboard/netconf.html',
+        title='Network Configuration'
+    )

@@ -1,5 +1,5 @@
 $(function () {
     $(document).ready(function () {
-        $("#home").addClass("active");
+        $("#netconf").addClass("active");
     })
 });

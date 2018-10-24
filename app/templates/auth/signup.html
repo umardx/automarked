@@ -62,6 +62,9 @@
                         {{ form.accept_tos(class="filled-in chk-col-cyan", id="terms") }}
                         <label for="terms">I read and agree to the <a href="javascript:void(0);">terms of usage</a>.</label>
                     </div>
+                    <div class="form-group">
+			{{ form.recaptcha(class="form-control") }}
+                    </div>
 
                     <button class="btn btn-block btn-lg bg-cyan waves-effect" type="submit">SIGN UP</button>
 

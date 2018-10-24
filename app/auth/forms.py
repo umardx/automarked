@@ -1,4 +1,4 @@
-from flask_wtf import FlaskForm
+from flask_wtf import FlaskForm, RecaptchaField
 from wtforms import StringField, PasswordField, BooleanField
 from wtforms.fields.html5 import EmailField
 from wtforms.validators import DataRequired, ValidationError, \
@@ -11,13 +11,14 @@ class ForgotForm(FlaskForm):
     Form for users to reset password
     """
     email = EmailField(
-        'Email', 
+        'Email',
         validators=[
             DataRequired(),
             Email(),
             Length(max=80)
         ]
     )
+    recaptcha = RecaptchaField('Recaptcha')
 
 
 class SignInForm(FlaskForm):
@@ -85,6 +86,7 @@ class SignupForm(FlaskForm):
         'I accept the term of services',
         validators=[DataRequired()]
     )
+    recaptcha = RecaptchaField('Recaptcha')
 
     @staticmethod
     def validate_email(self, field):
