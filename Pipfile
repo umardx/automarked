@@ -10,7 +10,8 @@ pyangbind = "*"
 xmltodict = "*"
 gunicorn = "*"
 ncclient = "*"
-sentry-sdk = {extras = ["flask"], version = "*"}
+sentry-sdk = "*"
+blinker = "*"
 
 [dev-packages]
 "autopep8" = "*"
