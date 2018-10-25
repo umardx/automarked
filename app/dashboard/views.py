@@ -5,8 +5,6 @@ from app.dashboard import dashboard
 from app.dashboard.forms import add_device_form
 from app import db
 from app.models import Devices
-from datetime import datetime
-from dateutil import tz
 
 
 @dashboard.route('/')

@@ -5,6 +5,9 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_migrate import Migrate
 
+import sentry_sdk
+from sentry_sdk.integrations.flask import FlaskIntegration
+
 
 # db variable initialization
 db = SQLAlchemy()
@@ -12,6 +15,11 @@ login_manager = LoginManager()
 
 
 def create_app(config_name):
+    sentry_sdk.init(
+        dsn="https://849a6be889314c8ca7ac4267be19e734@sentry.io/1308772",
+        integrations=[FlaskIntegration()]
+    )
+
     app = Flask(__name__)
     app.config.from_object('app.config')
     
