@@ -49,10 +49,14 @@
                                 <tbody>
                                     {% for device in devices %}
                                     <tr>
-                                        <td>{{ device.host }}</td>
+                                        <td id="{{ device.id }}">{{ device.host }}</td>
                                         <td>{{ device.port }}</td>
-                                        <td><status status="{{ device.device_status.status }}"></status></td>
-                                        <td><checked_time datetime="{{ device.device_status.checked_time }}"></checked_time></td>
+                                        <td><status status="{{ device.device_status.status }}">
+                                            <span class="hidden">{{ device.device_status.status }}</span></status>
+                                        </td>
+                                        <td><checked_time datetime="{{ device.device_status.checked_time }}">
+                                            <span class="hidden">{{ device.device_status.checked_time }}</span></checked_time>
+                                        </td>
                                     </tr>
                                     {% endfor %}
                                 </tbody>
