@@ -30,7 +30,7 @@ def create_app(config_name):
     login_manager.login_view = "auth.signin"
 
     migrate = Migrate(app, db)
-    
+
     from app import models
     from app.home import home as _home
     from app.auth import auth as _auth

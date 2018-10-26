@@ -1,25 +1,23 @@
 [packages]
+gunicorn = "*"
 flask = "==1.0.2"
 flask-wtf = "*"
 flask-sqlalchemy = "*"
 flask-login = "*"
 flask-migrate = "*"
 python-dotenv = "*"
+napalm-yang = "*"
 pyang = "*"
 pyangbind = "*"
-xmltodict = "*"
-gunicorn = "*"
 ncclient = "*"
+xmltodict = "*"
 sentry-sdk = "*"
 blinker = "*"
 
 [dev-packages]
 "autopep8" = "*"
-pytest-cov = "*"
 pylint-flask = "*"
 pylint = "*"
-pytest = "*"
-faker = "*"
 
 [requires]
 python_version = "3.6"

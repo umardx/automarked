@@ -1,11 +1,9 @@
-from flask import flash, render_template, request
 from flask_login import login_required
 
 from app.dashboard.netconf import netconf
-from app.models import ietf_interfaces
-from pprint import pprint
-from collections import OrderedDict
-from ncclient import manager
+from app.models.ietf import ietf_interfaces
+import pyangbind.lib.pybindJSON as pybindJSON
+import json
 
 
 @netconf.route('/')
@@ -13,15 +11,17 @@ from ncclient import manager
 def index():
     model = ietf_interfaces()
 
-    ge1 = model.interfaces.interface.add('GigabitEthernet2')
-    ipv4 = ge1.ipv4.address.add('167.205.3.1')
-    ipv4.netmask = '255.255.255.0'
-    ge1.description = 'NETCONF-CONFIGURED PORT'
-    ge1.ipv4.mtu = 9000
-    _ge1 = OrderedDict(ge1.get())
-    pprint(_ge1)
+    _interface = model.interfaces.interface.add('GigabitEthernet2')
+    _addr = _interface.ipv4.address.add('172.20.20.1')
 
-    return 'index'
+    _addr2 = _interface.ipv4.address.add('172.20.30.1')
+
+    json_data = pybindJSON.dumps(model, mode='ietf')
+    # print(json_data)
+
+    response = json.dumps(model.get(), indent=4)
+
+    return response
 
 
 @netconf.route('/config')

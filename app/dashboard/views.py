@@ -61,5 +61,4 @@ def list_device():
 @dashboard.route('/check_status/<int:device_id>', methods=['POST'])
 @login_required
 def check_status():
-        
     return str('Hellow World')

@@ -5,8 +5,6 @@ from werkzeug.security import generate_password_hash, \
 from _datetime import datetime, timezone
 import socket
 
-from app.models.ietf_interfaces import ietf_interfaces, ietf_ip, ietf_inet_types
-
 
 class Users(UserMixin, db.Model):
     """
