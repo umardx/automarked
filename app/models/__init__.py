@@ -67,6 +67,7 @@ class Devices(UserMixin, db.Model):
         return '<Device: {}:{} | {}>'.format(self.host, self.port, self.device_status.status)
 
     def update_status(self):
+        print("ANU")
         self.device_status = DeviceStatus(self.host, self.port)
 
 
