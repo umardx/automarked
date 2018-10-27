@@ -144,8 +144,8 @@ table.table-bordered.dataTable {
 }
 table.table-bordered.dataTable th,
 table.table-bordered.dataTable td {
-  cursor: pointer;
   border-left-width: 1px;
+  vertical-align: middle;
 }
 table.table-bordered.dataTable th:last-child, table.table-bordered.dataTable th:last-child,
 table.table-bordered.dataTable td:last-child,
