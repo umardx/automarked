@@ -26,7 +26,7 @@ class Users(UserMixin, db.Model):
         self.password = self.gen_password(password)
 
     def __repr__(self):
-        return '<User: {}, {}>'.format(self.username, self.email)
+        return '<user={},{}>'.format(self.username, self.email)
 
     @staticmethod
     def gen_password(password):
@@ -64,7 +64,7 @@ class Devices(UserMixin, db.Model):
         self.update_status()
 
     def __repr__(self):
-        return '<Device: {}:{} | {}>'.format(self.host, self.port, self.device_status.status)
+        return '<device:{}:{}>'.format(self.host, self.port)
 
     def update_status(self):
         self.device_status = DeviceStatus(self.host, self.port)
@@ -88,7 +88,7 @@ class DeviceStatus(UserMixin, db.Model):
         self.checked_time = datetime.now(timezone.utc)
 
     def __repr__(self):
-        return '<Device Status: {}:{}>'.format(self.device_id, self.status)
+        return '<status:{}:{}>'.format(self.device_id, self.status)
 
     @staticmethod
     def is_open(host, port):
