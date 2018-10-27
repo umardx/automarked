@@ -5,23 +5,42 @@ from app.models.ietf import ietf_interfaces
 import pyangbind.lib.pybindJSON as pybindJSON
 import json
 
+from napalm import get_network_driver
+import napalm_yang
 
-@netconf.route('/')
+
+@netconf.route('/<int:device_id>')
 # @login_required
-def index():
+def index(device_id):
+    print('<Device id="{}"/>'.format(device_id))
+    ge_name = "GigabitEthernet2"
+    description = "This is Description"
+
+    ip_addr = '1.1.1.1'
+    netmask = '255.255.255.0'
+
     model = ietf_interfaces()
-
-    _interface = model.interfaces.interface.add('GigabitEthernet2')
-    _addr = _interface.ipv4.address.add('172.20.20.1')
-
-    _addr2 = _interface.ipv4.address.add('172.20.30.1')
-
-    json_data = pybindJSON.dumps(model, mode='ietf')
-    # print(json_data)
-
-    response = json.dumps(model.get(), indent=4)
+    model.interfaces.interface.add(ge_name)
+    model.interfaces.interface[ge_name].description = description
+    model.interfaces.interface[ge_name].ipv4.address.add(ip_addr)
+    model.interfaces.interface[ge_name].ipv4.address[ip_addr].netmask = netmask
+    response = json_dump(model.get())
 
     return response
+
+
+def create_connection():
+    config = napalm_yang.base.Root()
+
+    # Adding models to the object
+    config.add_model(napalm_yang.models.openconfig_interfaces())
+    config.add_model(napalm_yang.models.openconfig_vlan())
+
+    return napalm_yang.utils.model_to_dict(config)
+
+
+def json_dump(dictionary):
+    return json.dumps(dictionary, indent=4)
 
 
 @netconf.route('/config')

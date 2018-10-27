@@ -1,1 +1,1 @@
-from .ietf_ip import *
+from .ietf_interfaces import *

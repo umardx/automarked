@@ -49,7 +49,18 @@
                                 <tbody>
                                     {% for device in devices %}
                                     <tr>
-                                        <td id="{{ device.id }}">{{ device.host }}</td>
+                                        <td id="{{ device.id }}">{{ device.host }}
+                                            <div class="btn-group btn-group-xs pull-right" role="group" aria-label="Extra-small button group">
+                                                <button type="button" title="Delete" class="btn bg-cyan waves-effect waves-light">
+                                                    <i class="material-icons">delete</i></button>
+                                                <button type="button" title="Edit" class="btn bg-cyan waves-effect waves-light">
+                                                    <i class="material-icons">edit</i></button>
+                                                <button type="button" title="Refresh" class="btn bg-cyan waves-effect waves-light">
+                                                    <i class="material-icons">cached</i></button>
+                                                <button type="button" title="Config Netconf" class="btn bg-cyan waves-effect waves-light">
+                                                    <i class="material-icons">send</i></button>
+                                            </div>
+                                        </td>
                                         <td>{{ device.port }}</td>
                                         <td><status status="{{ device.device_status.status }}">
                                             <span class="hidden">{{ device.device_status.status }}</span></status>
