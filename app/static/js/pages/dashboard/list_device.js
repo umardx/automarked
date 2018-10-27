@@ -8,7 +8,6 @@ $(function () {
 
         $('checked_time').each(function(i, e) {
             var time = moment.utc($(e).attr('datetime'));
-            console.log(now.diff(time, 'hours'))
             if(now.diff(time, 'hours') <= 1) {
                 $(e).html('<span class="badge bg-light-green">' + time.from(now) + '</span>');
             } else
@@ -28,5 +27,26 @@ $(function () {
                 $(e).html('<span class="badge bg-grey">' + 'Unreachable' + '</span>');
             }
         });
-    }, 500);
+    }, 100);
 });
+
+
+function delete_device(url) {
+    console.log(url);
+    windows.location.href(url);
+}
+
+
+function refresh_device(url) {
+    console.log(url);
+}
+
+
+function edit_device(url) {
+    console.log(url);
+}
+
+
+function netconf_device(url) {
+    console.log(url);
+}

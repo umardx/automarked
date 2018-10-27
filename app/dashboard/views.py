@@ -1,4 +1,4 @@
-from flask import flash, render_template, request
+from flask import flash, redirect, url_for, render_template, request
 from flask_login import login_required
 
 from app.dashboard import dashboard
@@ -40,7 +40,7 @@ def add_device():
             db.session.commit()
             flash(u'The device was successfully added.', 'success')
         except Exception as e:
-            flash(u'Can\'t add account to the database. ' + str(e), 'error')
+            flash(u'Can\'t add device to the database. ' + str(e), 'error')
 
     return render_template('dashboard/add_device.html', title='Add Device | Dashboard', form_add_device=form_add_device)
 
@@ -54,11 +54,33 @@ def list_device():
     moment('2018-10-22 11:03:24.422888','YYYY-MM-DD hh:mm:ss.SSSSSS').fromNow();
     """
 
-    device_list = Devices.query.all()
-    return render_template('dashboard/list_device.html', title='List Device | Dashboard', devices=device_list)
+    devices = Devices.query.all()
+    return render_template('dashboard/list_device.html', title='List Device | Dashboard', devices=devices)
 
 
-@dashboard.route('/check_status/<int:device_id>', methods=['POST'])
+@dashboard.route('/check_status/<int:device_id>')
 @login_required
-def check_status():
-    return str('Hellow World')
+def check_status(device_id):
+    _device = Devices.query.filter_by(id=device_id).first()
+    _device.update_status()
+    try:
+        db.session.commit()
+        flash(u'The device was successfully refresh the device.', 'success')
+    except Exception as e:
+        flash(u'Can\'t add device to the database. ' + str(e), 'error')
+    return redirect(url_for('dashboard.list_device'))
+
+
+@dashboard.route('/delete_device/<int:device_id>')
+@login_required
+def delete_device(device_id):
+    _device = Devices.query.filter_by(id=device_id).first()
+
+    try:
+        db.session.delete(_device)
+        db.session.commit()
+        flash(u'You were successfully deleted device', 'success')
+    except Exception as e:
+        flash(u'Can\'t delete device.' + str(e), 'error')
+
+    return redirect(url_for('dashboard.list_device'))
