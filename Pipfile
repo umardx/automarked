@@ -13,6 +13,7 @@ ncclient = "*"
 xmltodict = "*"
 sentry-sdk = "*"
 blinker = "*"
+regex = "*"
 
 [dev-packages]
 "autopep8" = "*"

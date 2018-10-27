@@ -55,32 +55,64 @@ def list_device():
     """
 
     devices = Devices.query.all()
-    return render_template('dashboard/list_device.html', title='List Device | Dashboard', devices=devices)
+
+    action = request.args.get('action')
+    device_id = request.args.get('device_id')
+
+    if action == 'refresh':
+        refresh(device_id)
+    elif action == 'refresh_all':
+        refresh_all(devices)
+    elif action == 'delete':
+        delete(device_id)
+    elif action == 'edit':
+        pass
+    elif action == 'netconf':
+        pass
+
+    return render_template(
+        'dashboard/list_device.html',
+        title='List Device | Dashboard',
+        devices=devices
+    )
 
 
-@dashboard.route('/check_status/<int:device_id>')
-@login_required
-def check_status(device_id):
-    _device = Devices.query.filter_by(id=device_id).first()
+def refresh(id):
+    _device = Devices.query.filter_by(id=id).first()
     _device.update_status()
+
+    try:
+        db.session.commit()
+        flash(u'The device was successfully refresh all devices.', 'success')
+    except Exception as e:
+        flash(u'Can\'t refresh the device. ' + str(e), 'error')
+    return redirect(url_for('dashboard.list_device'))
+
+
+def refresh_all(devices):
+    for device in devices:
+        device.update_status()
+
     try:
         db.session.commit()
         flash(u'The device was successfully refresh the device.', 'success')
     except Exception as e:
-        flash(u'Can\'t add device to the database. ' + str(e), 'error')
+        flash(u'Can\'t refresh the device. ' + str(e), 'error')
     return redirect(url_for('dashboard.list_device'))
 
 
-@dashboard.route('/delete_device/<int:device_id>')
-@login_required
-def delete_device(device_id):
-    _device = Devices.query.filter_by(id=device_id).first()
+def delete(id):
+    _device = Devices.query.filter_by(id=id).first()
 
     try:
         db.session.delete(_device)
         db.session.commit()
-        flash(u'You were successfully deleted device', 'success')
+        flash(u'You were successfully deleted the device', 'success')
     except Exception as e:
         flash(u'Can\'t delete device.' + str(e), 'error')
 
     return redirect(url_for('dashboard.list_device'))
+
+
+def edit(id):
+    pass
