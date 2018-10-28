@@ -6,7 +6,7 @@ import pyangbind.lib.pybindJSON as pybindJSON
 import json
 
 from napalm import get_network_driver
-import napalm_yang
+# import napalm_yang
 
 
 @netconf.route('/<int:device_id>')
@@ -29,14 +29,14 @@ def index(device_id):
     return response
 
 
-def create_connection():
-    config = napalm_yang.base.Root()
+# def create_connection():
+#     config = napalm_yang.base.Root()
 
-    # Adding models to the object
-    config.add_model(napalm_yang.models.openconfig_interfaces())
-    config.add_model(napalm_yang.models.openconfig_vlan())
+#     # Adding models to the object
+#     config.add_model(napalm_yang.models.openconfig_interfaces())
+#     config.add_model(napalm_yang.models.openconfig_vlan())
 
-    return napalm_yang.utils.model_to_dict(config)
+#     return napalm_yang.utils.model_to_dict(config)
 
 
 def json_dump(dictionary):
