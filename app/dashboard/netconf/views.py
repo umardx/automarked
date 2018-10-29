@@ -5,9 +5,6 @@ from app.models.ietf import ietf_interfaces
 import pyangbind.lib.pybindJSON as pybindJSON
 import json
 
-from napalm import get_network_driver
-import napalm_yang
-
 
 @netconf.route('/<int:device_id>')
 # @login_required
@@ -27,16 +24,6 @@ def index(device_id):
     response = json_dump(model.get())
 
     return response
-
-
-def create_connection():
-    config = napalm_yang.base.Root()
-
-    # Adding models to the object
-    config.add_model(napalm_yang.models.openconfig_interfaces())
-    config.add_model(napalm_yang.models.openconfig_vlan())
-
-    return napalm_yang.utils.model_to_dict(config)
 
 
 def json_dump(dictionary):
