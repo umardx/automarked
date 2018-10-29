@@ -1,6 +1,5 @@
 [packages]
-gunicorn = "*"
-flask = "==1.0.2"
+flask ="==1.0.2"
 flask-wtf = "*"
 flask-sqlalchemy = "*"
 flask-login = "*"
@@ -12,6 +11,7 @@ ncclient = "*"
 xmltodict = "*"
 sentry-sdk = "*"
 blinker = "*"
+regex = "*"
 
 [dev-packages]
 "autopep8" = "*"
@@ -19,4 +19,4 @@ pylint-flask = "*"
 pylint = "*"
 
 [requires]
-python_version = "3.6"
+python_version = "*"

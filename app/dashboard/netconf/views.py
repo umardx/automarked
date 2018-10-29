@@ -2,7 +2,6 @@ from flask_login import login_required
 
 from app.dashboard.netconf import netconf
 from app.models.ietf import ietf_interfaces
-import pyangbind.lib.pybindJSON as pybindJSON
 import json
 
 
