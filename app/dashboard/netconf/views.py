@@ -1,12 +1,11 @@
 from flask import render_template
 from flask_login import login_required
+from markupsafe import Markup
 
 from app.dashboard.netconf import netconf
 from app.models.ietf import ietf_interfaces
 from app.models import Devices
 
-from ncclient import manager
-import xmltodict
 import json
 
 
@@ -21,10 +20,10 @@ PASS = 'admin'
 def index():
     devices = Devices.query.all()
 
-    ge_name = "GigabitEthernet2"
-    description = "This is Description"
+    ge_name = "Interface Name"
+    description = "Description"
 
-    ip_addr = '1.1.1.1'
+    ip_addr = '0.0.0.0'
     netmask = '255.255.255.0'
 
     model = ietf_interfaces()
@@ -32,33 +31,18 @@ def index():
     model.interfaces.interface[ge_name].description = description
     model.interfaces.interface[ge_name].ipv4.address.add(ip_addr)
     model.interfaces.interface[ge_name].ipv4.address[ip_addr].netmask = netmask
-    response = json_dump(model.get())
+    response = Markup(json_dump(model.get()))
 
     return render_template(
         'dashboard/netconf/index.html',
         title='Netconf | Dashboard',
-        response = response,
+        response=response,
         devices=devices
     )
 
 
 def json_dump(dictionary):
     return json.dumps(dictionary, indent=4)
-
-
-def get_capabilities(HOST, PORT, USER, PASS):
-
-    with manager.connect(host=HOST, port=PORT, username=USER, password=PASS,
-                         hostkey_verify=False, device_params={'name': 'default'},
-                         look_for_keys=False, allow_agent=False) as m:
-        return m.server_capabilities
-
-
-def get_config(HOST, PORT, USER, PASS):
-    with manager.connect(host=HOST, port=PORT, username=USER, password=PASS,
-                         hostkey_verify=False, device_params={'name': 'default'},
-                         look_for_keys=False, allow_agent=False) as m:
-        return m.get_config(source='running').data_xml
 
 
 @netconf.route('/config')
