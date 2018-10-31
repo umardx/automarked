@@ -1,18 +1,29 @@
+from flask import render_template
 from flask_login import login_required
+from markupsafe import Markup
 
 from app.dashboard.netconf import netconf
 from app.models.ietf import ietf_interfaces
+from app.models import Devices
+
 import json
 
 
-@netconf.route('/<int:device_id>')
-# @login_required
-def index(device_id):
-    print('<Device id="{}"/>'.format(device_id))
-    ge_name = "GigabitEthernet2"
-    description = "This is Description"
+HOST = 'r1.udx'
+PORT = 8321
+USER = 'admin'
+PASS = 'admin'
 
-    ip_addr = '1.1.1.1'
+
+@netconf.route('/')
+# @login_required
+def index():
+    devices = Devices.query.all()
+
+    ge_name = "Interface Name"
+    description = "Description"
+
+    ip_addr = '0.0.0.0'
     netmask = '255.255.255.0'
 
     model = ietf_interfaces()
@@ -20,9 +31,14 @@ def index(device_id):
     model.interfaces.interface[ge_name].description = description
     model.interfaces.interface[ge_name].ipv4.address.add(ip_addr)
     model.interfaces.interface[ge_name].ipv4.address[ip_addr].netmask = netmask
-    response = json_dump(model.get())
+    response = Markup(json_dump(model.get()))
 
-    return response
+    return render_template(
+        'dashboard/netconf/index.html',
+        title='Netconf | Dashboard',
+        response=response,
+        devices=devices
+    )
 
 
 def json_dump(dictionary):
