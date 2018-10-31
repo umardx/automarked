@@ -42,7 +42,11 @@ def add_device():
         except Exception as e:
             flash(u'Can\'t add device to the database. ' + str(e), 'error')
 
-    return render_template('dashboard/add_device.html', title='Add Device | Dashboard', form_add_device=form_add_device)
+    return render_template(
+        'dashboard/add_device.html',
+        title='Add Device | Dashboard',
+        form_add_device=form_add_device
+    )
 
 
 @dashboard.route('/list_device', methods=['GET', 'POST'])
@@ -73,7 +77,7 @@ def list_device():
     return render_template(
         'dashboard/list_device.html',
         title='List Device | Dashboard',
-        devices=devices
+        devices=Devices.query.all()
     )
 
 

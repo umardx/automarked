@@ -12,6 +12,10 @@ xmltodict = "*"
 sentry-sdk = "*"
 blinker = "*"
 regex = "*"
+celery = "*"
+ipython = "*"
+dicttoxml = "*"
+jupyter = "*"
 
 [dev-packages]
 "autopep8" = "*"
