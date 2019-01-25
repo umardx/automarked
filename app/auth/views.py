@@ -78,7 +78,8 @@ def forgot():
     Handle requests to the /forgot_password route
     Reset password account
     """
-    return_to_dashboard()
+    if current_user.is_authenticated:
+        return redirect(url_for('dashboard.index'))
 
     formForgot = ForgotForm()
 
