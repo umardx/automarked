@@ -17,10 +17,9 @@ ipython = "*"
 dicttoxml = "*"
 jupyter = "*"
 ydk = "*"
-ydk-models-cisco-ios-xr = "*"
 ydk-models-ietf = "*"
 ydk-models-openconfig = "*"
-ydk-models-cisco-ios-xe = "*"
+ydk-models-cisco-ios-xr = "*"
 
 [dev-packages]
 "autopep8" = "*"

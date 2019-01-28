@@ -1,45 +1,46 @@
 from ydk.services import CRUDService
 from ydk.providers import  NetconfServiceProvider
-from ydk.models.cisco_ios_xr import Cisco_IOS_XR_ifmgr_cfg as xr_ifmgr_cfg
+from ydk.filters import YFilter
+from ydk.models.cisco_ios_xr import Cisco_IOS_XR_ifmgr_cfg as ifmgr_cfg
 
 
-def create_ifaceConfigs(ifaceConfigs, iface_name, description, ipv4_address, ipv4_netmask):
-    ifaceConfig = ifaceConfigs.InterfaceConfiguration()
-    ifaceConfig.active = 'act'
-    ifaceConfig.interface_name = iface_name
-    ifaceConfig.description = description
+def create_iface_configs(iface_configs, iface_name, description, ipv4_address, ipv4_netmask):
+    iface_config = iface_configs.InterfaceConfiguration()
+    iface_config.active = 'act'
+    iface_config.interface_name = iface_name
+    iface_config.description = description
 
-    ipv4 = ifaceConfig.ipv4_network.addresses.Primary()
+    ipv4 = iface_config.ipv4_network.addresses.Primary()
     ipv4.address = ipv4_address
     ipv4.netmask = ipv4_netmask
 
-    ifaceConfig.ipv4_network.addresses.primary = ipv4
+    iface_config.ipv4_network.addresses.primary = ipv4
 
-    ifaceConfig.statistics.load_interval = 30
+    iface_config.statistics.load_interval = 60
 
-    ifaceConfigs.interface_configuration.append(ifaceConfig)
-
+    iface_configs.interface_configuration.append(iface_config)
 
 
 provider = NetconfServiceProvider(
-    address = '10.10.20.170',
-    port = 8321,
-    username = 'admin',
-    password = 'admin'
+    address='10.10.20.170',
+    port=8321,
+    username='admin',
+    password='admin'
 )
 
 crud = CRUDService()
 
-interface_configurations = xr_ifmgr_cfg.InterfaceConfigurations()
-create_ifaceConfigs(
-    ifaceConfigs=interface_configurations,
-    iface_name='GigabitEthernet0/0/0/1',
+interface_configurations = ifmgr_cfg.InterfaceConfigurations()
+
+create_iface_configs(
+    iface_configs=interface_configurations,
+    iface_name='GigabitEthernet0/0/0/2',
     description='Example descriptions',
-    ipv4_address = '192.168.1.5',
-    ipv4_netmask = '255.255.255.252'
+    ipv4_address='192.168.2.5',
+    ipv4_netmask='255.255.255.128'
 )
 
 # create configuration on NETCONF device
-crud.create(provider, interface_configurations)
+crud.update(provider, interface_configurations)
 
 exit()
