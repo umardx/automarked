@@ -15,19 +15,19 @@ crud = CRUDService()
 
 iface_configs = ifmgr_cfg.InterfaceConfigurations()
 iface_config = iface_configs.InterfaceConfiguration()
+iface_config.active = 'act'
+iface_config.interface_name = 'NamakuSiapaHayo'
 iface_config.shutdown = Empty()
 
 ipv4 = iface_config.ipv4_network.addresses.Primary()
 iface_config.ipv4_network.addresses.primary = ipv4
-
-iface_config.active = 'act'
 
 iface_configs.interface_configuration.append(iface_config)
 
 result = crud.read(provider, iface_configs)
 
 codec = CodecService()
-codec_provider = CodecServiceProvider(type='json')
+codec_provider = CodecServiceProvider(type='xml')
 
 
-print(codec.encode(codec_provider, result))
+print(codec.encode(codec_provider, iface_configs))

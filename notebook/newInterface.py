@@ -17,8 +17,8 @@ def create_iface_configs(iface_configs, iface_name, description, ipv4_address, i
 
     iface_config.ipv4_network.addresses.primary = ipv4
 
-    # iface_config.statistics.load_interval = 60
-    # iface_config.statistics.load_interval = YFilter.delete
+    iface_config.statistics.load_interval = 60
+    iface_config.statistics.load_interval = YFilter.delete
 
     iface_config.shutdown = Empty()
     iface_config.shutdown = YFilter.delete
