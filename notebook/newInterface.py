@@ -1,6 +1,7 @@
 from ydk.services import CRUDService
 from ydk.providers import  NetconfServiceProvider
 from ydk.filters import YFilter
+from ydk.types import Empty
 from ydk.models.cisco_ios_xr import Cisco_IOS_XR_ifmgr_cfg as ifmgr_cfg
 
 
@@ -16,7 +17,11 @@ def create_iface_configs(iface_configs, iface_name, description, ipv4_address, i
 
     iface_config.ipv4_network.addresses.primary = ipv4
 
-    iface_config.statistics.load_interval = 60
+    # iface_config.statistics.load_interval = 60
+    # iface_config.statistics.load_interval = YFilter.delete
+
+    iface_config.shutdown = Empty()
+    iface_config.shutdown = YFilter.delete
 
     iface_configs.interface_configuration.append(iface_config)
 

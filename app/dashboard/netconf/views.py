@@ -2,17 +2,14 @@ from flask import render_template
 from flask_login import login_required
 from markupsafe import Markup
 
+from ydk.services import CRUDService, CodecService
+from ydk.providers import NetconfServiceProvider, CodecServiceProvider
+from ydk.models.cisco_ios_xr import Cisco_IOS_XR_ifmgr_cfg
+
 from app.dashboard.netconf import netconf
-from app.models.ietf import ietf_interfaces
 from app.models import Devices
 
 import json
-
-
-HOST = 'r1.udx'
-PORT = 8321
-USER = 'admin'
-PASS = 'admin'
 
 
 @netconf.route('/')
@@ -21,22 +18,33 @@ def index():
     devices = Devices.query.all()
 
     ge_name = "Interface Name"
-    description = "Description"
+    description = "Description Interface Name"
 
-    ip_addr = '0.0.0.0'
+    ip_addr = '10.10.10.10'
     netmask = '255.255.255.0'
 
-    model = ietf_interfaces()
-    model.interfaces.interface.add(ge_name)
-    model.interfaces.interface[ge_name].description = description
-    model.interfaces.interface[ge_name].ipv4.address.add(ip_addr)
-    model.interfaces.interface[ge_name].ipv4.address[ip_addr].netmask = netmask
-    response = Markup(json_dump(model.get()))
+    # crud_provider = NetconfServiceProvider(
+    #     address='10.10.20.170',
+    #     port=8321,
+    #     username='admin',
+    #     password='admin'
+    # )
+    codec_provider = CodecServiceProvider(type='json')
+
+    # crud = CRUDService()
+    codec = CodecService()
+
+    if_configs = Cisco_IOS_XR_ifmgr_cfg.InterfaceConfigurations()
+    if_config = if_configs.InterfaceConfiguration()
+    if_config.active = 'act'
+    if_config.interface_name = ge_name
+
+    if_configs.interface_configuration.append(if_config)
 
     return render_template(
         'dashboard/netconf/index.html',
         title='Netconf | Dashboard',
-        response=response,
+        response='OKE',
         devices=devices
     )
 

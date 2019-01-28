@@ -1,5 +1,5 @@
-from ydk.services import CRUDService
-from ydk.providers import  NetconfServiceProvider
+from ydk.services import CRUDService, CodecService
+from ydk.providers import NetconfServiceProvider, CodecServiceProvider
 from ydk.models.cisco_ios_xr import Cisco_IOS_XR_ifmgr_cfg as ifmgr_cfg
 
 
