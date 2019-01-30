@@ -26,7 +26,7 @@ def get_celery_file():
 BROKER_TRANSPORT = "sqlalchemy"
 BROKER_HOST = get_celery_file()
 
-SECRET_KEY = urandom(32)
+SECRET_KEY = '2MiMm7xJ9LlxxP0eKo3ow' #urandom(32)
 SQLALCHEMY_DATABASE_URI = get_db_file()
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 TEMPLATES_AUTO_RELOAD = True
