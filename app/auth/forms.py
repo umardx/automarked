@@ -18,7 +18,7 @@ class ForgotForm(FlaskForm):
             Length(max=80)
         ]
     )
-    recaptcha = RecaptchaField('Recaptcha', validators=[DataRequired()])
+    recaptcha = RecaptchaField('Recaptcha')
 
 
 class SignInForm(FlaskForm):
@@ -86,7 +86,7 @@ class SignupForm(FlaskForm):
         'I accept the term of services',
         validators=[DataRequired()]
     )
-    recaptcha = RecaptchaField('Recaptcha', validators=[DataRequired()])
+    recaptcha = RecaptchaField('Recaptcha')
 
     @staticmethod
     def validate_email(self, field):
