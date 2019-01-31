@@ -71,10 +71,12 @@ def list_device():
             edit(_device, _id)
         else:
             for field in form_edit_device.errors:
-                _error = str(form_edit_device.errors[field]).replace("['", "").replace("']", "")
+                _error = str(form_edit_device.errors[field])\
+                    .replace("['", "").replace("']", "")
                 flash(u'' + _error, 'warning')
 
-            return redirect(url_for('dashboard.list_device') + '#editModal' + _id)
+            return redirect(url_for('dashboard.list_device') + \
+                            '#editModal' + _id)
 
     devices = Devices.query.all()
 
@@ -87,7 +89,7 @@ def list_device():
         refresh_all(devices)
     elif action == 'delete':
         delete(device_id)
-    elif action == 'edit':
+    elif action == 'telemetry':
         pass
     elif action == 'netconf':
         pass
@@ -106,7 +108,10 @@ def refresh(id):
 
     try:
         db.session.commit()
-        flash(u'All devices were successfully refreshed.', 'success')
+        flash(
+            u'All devices were successfully refreshed.',
+            'success'
+        )
     except Exception as e:
         flash(u'Can\'t refresh the device. ' + str(e), 'error')
     return redirect(url_for('dashboard.list_device'))
