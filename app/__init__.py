@@ -36,10 +36,12 @@ def create_app(config_name):
     from app.auth import auth as _auth
     from app.dashboard import dashboard as _dashboard
     from app.dashboard.netconf import netconf as _netconf
+    from app.dashboard.telemetry import telemetry as _telemetry
 
     app.register_blueprint(_home)
     app.register_blueprint(_auth, url_prefix='/auth')
     app.register_blueprint(_dashboard, url_prefix='/dashboard')
     app.register_blueprint(_netconf, url_prefix='/dashboard/netconf')
+    app.register_blueprint(_telemetry, url_prefix='/dashboard/telemetry')
 
     return app

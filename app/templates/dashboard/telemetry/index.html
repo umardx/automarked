@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <meta name="theme-color" content="#00BCD4">
+    <!-- when using the mode "code", it's important to specify charset utf-8 -->
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+    <title>{{ title }} — Automarked</title>
+    <!-- Favicon-->
+    <link rel="icon" href="{{ url_for('static', filename='img/fav.png') }}" type="image/x-icon">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css">
+    <!-- Bootstrap Core Css -->
+    <link href="{{ url_for('static', filename='plugins/bootstrap/css/bootstrap.css') }}" rel="stylesheet" type="text/css">
+    <!-- Waves Effect Css -->
+    <link href="{{ url_for('static', filename='plugins/node-waves/waves.css') }}" rel="stylesheet" type="text/css">
+    <!-- Animation Css -->
+    <link href="{{ url_for('static', filename='plugins/animate-css/animate.css') }}" rel="stylesheet" type="text/css">
+    <!-- Custom Css -->
+    <link href="{{ url_for('static', filename='css/themes/all-themes.css') }}" rel="stylesheet" type="text/css">
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet" type="text/css">
+    <link href="{{ url_for('static', filename='css/dashboard.css') }}" rel="stylesheet" type="text/css">
+    <link href="{{ url_for('static', filename='css/toastr.min.css') }}" rel="stylesheet" type="text/css">
+    <link href="{{ url_for('static', filename='plugins/jsoneditor/jsoneditor.css') }}" rel="stylesheet" type="text/css">
+    {% block addcss %} {% endblock %}
+</head>
+<body>
+    <div id="jsonview"></div>
+</body>
+<script src="{{ url_for('static', filename='plugins/jsoneditor/jsoneditor.js') }}"></script>
+    <script>
+        var container = document.getElementById("jsonview");
+        var options = {};
+        var editor = new JSONEditor(container, options);
+
+        // set json
+        var json = {{ response }};
+        editor.set(json);
+
+        // get json
+        var json = editor.get();
+    </script>
+</html>

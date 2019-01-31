@@ -71,15 +71,16 @@ def list_device():
             edit(_device, _id)
         else:
             for field in form_edit_device.errors:
-                _error = str(form_edit_device.errors[field])\
+                _error = str(
+                    form_edit_device.errors[field])\
                     .replace("['", "").replace("']", "")
                 flash(u'' + _error, 'warning')
 
-            return redirect(url_for('dashboard.list_device') + \
-                            '#editModal' + _id)
+            return redirect(url_for(
+                'dashboard.list_device'
+            ) + '#editModal' + _id)
 
     devices = Devices.query.all()
-
     action = request.args.get('action')
     device_id = request.args.get('device_id')
 
@@ -158,8 +159,3 @@ def edit(device, id):
         flash(u'Can\'t update the device. ' + str(e), 'error')
 
     return redirect(url_for('dashboard.list_device'))
-
-
-def call_modal(id):
-    return redirect(url_for('dashboard.list_device') + '#editModal' + id)
-
