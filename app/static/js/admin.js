@@ -11,7 +11,7 @@ $.AdminBSB.options = {
         deepPurple: '#673AB7',
         indigo: '#3F51B5',
         blue: '#2196F3',
-        lightBlue: '#03A9F4',
+        lightBlue: '#00BCD4;',
         cyan: '#00BCD4',
         teal: '#009688',
         green: '#4CAF50',

@@ -1,5 +1,5 @@
 ﻿.theme-light-blue .navbar {
-  background-color: #03A9F4; }
+  background-color: #00BCD4;; }
 
 .theme-light-blue .navbar-brand {
   color: #fff; }
@@ -30,7 +30,7 @@
 .theme-light-blue .sidebar .menu .list li.active {
   background-color: transparent; }
   .theme-light-blue .sidebar .menu .list li.active > :first-child i, .theme-light-blue .sidebar .menu .list li.active > :first-child span {
-    color: #03A9F4; }
+    color: #00BCD4;; }
 
 .theme-light-blue .sidebar .menu .list .toggled {
   background-color: transparent; }
@@ -41,5 +41,5 @@
 .theme-light-blue .sidebar .legal {
   background-color: #fff; }
   .theme-light-blue .sidebar .legal .copyright a {
-    color: #03A9F4 !important; }
+    color: #00BCD4; !important; }
 
