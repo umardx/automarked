@@ -60,14 +60,20 @@ def list_device():
     form_edit_device = edit_device_form()
 
     if request.method == 'POST':
+        _id = request.form['id']
         if form_edit_device.validate_on_submit():
-            pass
+            _device = Devices(
+                host=form_edit_device.host.data,
+                port=form_edit_device.port.data,
+                username=form_edit_device.username.data,
+                password=form_edit_device.password.data
+            )
+            edit(_device, _id)
         else:
-            _id = request.form['id']
             for field in form_edit_device.errors:
                 _error = str(form_edit_device.errors[field]).replace("['", "").replace("']", "")
                 flash(u'' + _error, 'warning')
-                break
+
             return redirect(url_for('dashboard.list_device') + '#editModal' + _id)
 
     devices = Devices.query.all()
@@ -131,9 +137,15 @@ def delete(id):
     return redirect(url_for('dashboard.list_device'))
 
 
-def edit(device):
+def edit(device, id):
     try:
-        db.session.update(device)
+        _device = Devices.query.filter_by(id=id).first()
+        _device.update(
+            port=device.port,
+            username=device.username,
+            password=device.password
+        )
+        db.session.commit()
         flash(u'The device was successfully updated', 'success')
     except AttributeError as e:
         flash(u'Can\'t determine the device. ' + str(e), 'error')

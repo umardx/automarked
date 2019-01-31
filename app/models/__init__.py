@@ -66,6 +66,12 @@ class Devices(UserMixin, db.Model):
     def __repr__(self):
         return '<device:{}:{}>'.format(self.host, self.port)
 
+    def update(self, port, username, password):
+        self.port = port
+        self.username = username
+        self.password = password
+        self.update_status()
+
     def update_status(self):
         self.device_status = DeviceStatus(self.host, self.port)
 
