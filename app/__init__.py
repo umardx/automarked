@@ -4,6 +4,7 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_migrate import Migrate
+from celery import Celery
 
 import sentry_sdk
 from sentry_sdk.integrations.flask import FlaskIntegration
@@ -30,6 +31,10 @@ def create_app(config_name):
     login_manager.login_view = "auth.signin"
 
     migrate = Migrate(app, db)
+
+    # Initialize Celery
+    celery = Celery(app.name, broker=app.config['CELERY_BROKER_URL'])
+    celery.conf.update(app.config)
 
     from app import models
     from app.home import home as _home
