@@ -1,5 +1,6 @@
-from flask import flash, redirect, url_for, render_template, request
-from flask_login import login_required
+from flask import flash, redirect, url_for, \
+    render_template, request, jsonify, json
+from flask_login import login_required, current_user
 
 from app.dashboard import dashboard
 from app.dashboard.forms import add_device_form, edit_device_form
@@ -78,9 +79,9 @@ def list_device():
 
             return redirect(url_for(
                 'dashboard.list_device'
-            ) + '#editModal' + _id)
+            ) + '#editDevice' + _id)
 
-    devices = Devices.query.all()
+    devices = Devices.query.filter_by(user_id=current_user.id).all()
     action = request.args.get('action')
     device_id = request.args.get('device_id')
 
@@ -99,7 +100,9 @@ def list_device():
         'dashboard/list_device.html',
         title='List Device | Dashboard',
         form_edit_device=form_edit_device,
-        devices=Devices.query.all()
+        devices=Devices.query.filter_by(
+            user_id=current_user.id
+        ).all()
     )
 
 
@@ -119,8 +122,8 @@ def refresh(id):
 
 
 def refresh_all(devices):
-    for device in devices:
-        device.update_status()
+    for _device in devices:
+        _device.update_status()
 
     try:
         db.session.commit()
@@ -159,3 +162,18 @@ def edit(device, id):
         flash(u'Can\'t update the device. ' + str(e), 'error')
 
     return redirect(url_for('dashboard.list_device'))
+
+
+@dashboard.route('/device/<id>')
+@login_required
+def device(id):
+    data = dict()
+    _device = Devices.query.filter_by(id=id).first()
+    if _device is not None:
+        data['id'] = _device.id
+        data['host'] = _device.host
+        data['port'] = _device.port
+        data['username'] = _device.username
+        data['password'] = _device.password
+
+    return jsonify(data)

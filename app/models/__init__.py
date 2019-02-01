@@ -1,5 +1,6 @@
 from flask_login import UserMixin
 from app import db, login_manager
+from flask_login import login_required, current_user
 from werkzeug.security import generate_password_hash, \
     check_password_hash
 from _datetime import datetime, timezone
@@ -50,18 +51,21 @@ class Devices(UserMixin, db.Model):
     __tablename__ = 'devices'
 
     id = db.Column(db.Integer, nullable=False, primary_key=True)
-    host = db.Column(db.String(39), nullable=False, unique=True)
+    host = db.Column(db.String(39), nullable=False)
     port = db.Column(db.Integer, nullable=False)
     username = db.Column(db.String(32), nullable=False)
     password = db.Column(db.String(80), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     device_status = db.relationship('DeviceStatus', uselist=False, backref="devices", lazy=True)
 
+    @login_required
     def __init__(self, host, port, username, password):
         self.host = host
         self.port = port
         self.username = username
         self.password = password
-        self.update_status()
+        self.user_id = current_user.id
+        self.create_status()
 
     def __repr__(self):
         return '<device:{}:{}>'.format(self.host, self.port)
@@ -70,10 +74,13 @@ class Devices(UserMixin, db.Model):
         self.port = port
         self.username = username
         self.password = password
-        self.update_status()
+        self.create_status()
+
+    def create_status(self):
+        self.device_status = DeviceStatus(self.host, self.port)
 
     def update_status(self):
-        self.device_status = DeviceStatus(self.host, self.port)
+        self.device_status.update(self.host, self.port)
 
 
 class DeviceStatus(UserMixin, db.Model):
@@ -95,6 +102,10 @@ class DeviceStatus(UserMixin, db.Model):
 
     def __repr__(self):
         return '<status:{}:{}>'.format(self.device_id, self.status)
+
+    def update(self, host, port):
+        self.status = self.is_open(host, port)
+        self.checked_time = datetime.now(timezone.utc)
 
     @staticmethod
     def is_open(host, port):
