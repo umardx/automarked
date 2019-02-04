@@ -1,5 +1,5 @@
 from flask import flash, redirect, url_for, \
-    render_template, request, jsonify, json
+    render_template, request, jsonify
 from flask_login import login_required, current_user
 
 from app.dashboard import dashboard

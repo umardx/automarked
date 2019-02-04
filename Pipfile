@@ -20,6 +20,8 @@ ydk = "*"
 ydk-models-ietf = "*"
 ydk-models-openconfig = "*"
 ydk-models-cisco-ios-xr = "*"
+flask-celery = "*"
+flask-celeryext = "*"
 
 [dev-packages]
 "autopep8" = "*"
