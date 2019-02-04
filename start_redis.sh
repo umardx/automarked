@@ -1,4 +1,4 @@
-#!/bin/bash -x
+#!/bin/bash
 if [ ! -d redis-stable/src ]; then
     curl -O http://download.redis.io/redis-stable.tar.gz
     tar xvzf redis-stable.tar.gz
@@ -6,8 +6,12 @@ if [ ! -d redis-stable/src ]; then
     cd redis-stable
     make
 else
-    redis-stable/src/redis-server
+    cd redis-stable
 fi
 
-exit 0
+#vm.overcommit_memory = 1
+#echo never > /sys/kernel/mm/transparent_hugepage/enabled
 
+src/redis-server
+
+exit 0
