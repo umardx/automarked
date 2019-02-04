@@ -62,6 +62,7 @@ def list_device():
 
     if request.method == 'POST':
         _id = request.form['id']
+
         if form_edit_device.validate_on_submit():
             _device = Devices(
                 host=form_edit_device.host.data,
@@ -69,19 +70,24 @@ def list_device():
                 username=form_edit_device.username.data,
                 password=form_edit_device.password.data
             )
+
             edit(_device, _id)
+
         else:
             for field in form_edit_device.errors:
-                _error = str(
+                _error = 'Field ' + str(field) + ': ' + str(
                     form_edit_device.errors[field])\
                     .replace("['", "").replace("']", "")
+
                 flash(u'' + _error, 'warning')
 
             return redirect(url_for(
-                'dashboard.list_device'
-            ) + '#editDevice' + _id)
+                'dashboard.list_device',
+                device_id=_id
+            ) + '#editDevice')
 
     devices = Devices.query.filter_by(user_id=current_user.id).all()
+
     action = request.args.get('action')
     device_id = request.args.get('device_id')
 
@@ -102,7 +108,8 @@ def list_device():
         form_edit_device=form_edit_device,
         devices=Devices.query.filter_by(
             user_id=current_user.id
-        ).all()
+        ).all(),
+        device_id=device_id
     )
 
 
