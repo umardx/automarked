@@ -28,5 +28,27 @@ $(function () {
                 $(e).html('<span class="badge bg-grey">' + 'Unreachable' + '</span>');
             }
         });
-    }, 200);
+    }, 250);
+});
+
+function getId(_device_id){
+    document.device_id = _device_id;
+}
+
+$(document).on('opening', '.remodal', function () {
+    var modal = $(this);
+    let device_id = document.device_id;
+    fetch('/dashboard/device/' + device_id).then(function (response) {
+        response.json().then(function (data) {
+            document.getElementById('id').value = device_id;
+            document.getElementById('host').value = data.host;
+            document.getElementById('host').focus();
+            document.getElementById('port').value = data.port;
+            document.getElementById('port').focus();
+            document.getElementById('username').value = data.username;
+            document.getElementById('username').focus();
+            document.getElementById('password').value = data.password;
+            document.getElementById('password').focus();
+        })
+    })
 });

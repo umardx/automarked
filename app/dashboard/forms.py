@@ -14,7 +14,11 @@ class add_device_form(FlaskForm):
         'Host',
         validators=[
             DataRequired(),
-            Regexp(r'(^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$)|(^([a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6}$)', message='Invalid hostname or IPv4 address.')]
+            Regexp(
+                r'(^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$)|(^([a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6}$)',
+                message='Invalid hostname or IPv4 address.'
+            )
+        ]
     )
     port = IntegerField(
         'Port',
@@ -24,7 +28,10 @@ class add_device_form(FlaskForm):
         'Username',
         validators=[
             DataRequired(),
-            Regexp(r'^[A-Za-z0-9]+(?:[._][A-Za-z0-9]+)*$', message='Username must contain only letters, numbers or underscore.'),
+            Regexp(
+                r'^[A-Za-z0-9]+(?:[._][A-Za-z0-9]+)*$',
+                message='Username must contain only letters, numbers or underscore.'
+            ),
             Length(max=32)]
         )
     password = PasswordField(
@@ -36,3 +43,40 @@ class add_device_form(FlaskForm):
     def validate_host(self, field):
         if Devices.query.filter_by(host=field.data).first():
             raise ValidationError('The host has already existed.')
+
+class edit_device_form(FlaskForm):
+    """
+    Form for users to add new netconf device connection
+    """
+    id = IntegerField(
+        'Id'
+    )
+    host = StringField(
+        'Host',
+        validators=[
+            DataRequired(),
+            Regexp(
+                r'(^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$)|(^([a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6}$)',
+                message='Invalid hostname or IPv4 address.'
+            )
+        ]
+    )
+    port = IntegerField(
+        'Port',
+        validators=[DataRequired(), NumberRange(min=1, max=65535)]
+    )
+    username = StringField(
+        'Username',
+        validators=[
+            DataRequired(),
+            Regexp(
+                r'^[A-Za-z0-9]+(?:[._][A-Za-z0-9]+)*$',
+                message='Username must contain only letters, numbers or underscore.'
+            ),
+            Length(max=32)
+        ]
+    )
+    password = PasswordField(
+        'Password',
+        validators=[DataRequired(), Length(min=3, max=32)]
+    )

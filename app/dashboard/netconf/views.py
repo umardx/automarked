@@ -1,37 +1,35 @@
-from flask import render_template
+from flask import render_template, jsonify
 from flask_login import login_required
 from markupsafe import Markup
 
 from app.dashboard.netconf import netconf
-from app.models.ietf import ietf_interfaces
 from app.models import Devices
 
 import json
-
-
-HOST = 'r1.udx'
-PORT = 8321
-USER = 'admin'
-PASS = 'admin'
 
 
 @netconf.route('/')
 # @login_required
 def index():
     devices = Devices.query.all()
-
-    ge_name = "Interface Name"
-    description = "Description"
-
-    ip_addr = '0.0.0.0'
-    netmask = '255.255.255.0'
-
-    model = ietf_interfaces()
-    model.interfaces.interface.add(ge_name)
-    model.interfaces.interface[ge_name].description = description
-    model.interfaces.interface[ge_name].ipv4.address.add(ip_addr)
-    model.interfaces.interface[ge_name].ipv4.address[ip_addr].netmask = netmask
-    response = Markup(json_dump(model.get()))
+    sample = """{
+        "asbr": {
+            "name": "asbr1",
+            "address": "198.18.1.11"
+        },
+        "as": 65001,
+        "interface": {
+            "name": "GigabitEthernet0/0/0/0",
+            "description": "Peering with AS65002",
+            "address": "192.168.0.1",
+            "netmask": 24
+        },
+        "neighbor": {
+            "address": "192.168.0.2",
+            "as": 65002
+        }
+    }"""
+    response = Markup(json_dump(json.loads(sample)))
 
     return render_template(
         'dashboard/netconf/index.html',

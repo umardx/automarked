@@ -7,4 +7,6 @@ pip install pipenv
 echo '[pipenv install]'
 pipenv install --dev
 
+start_redis.sh &
+
 exit 0

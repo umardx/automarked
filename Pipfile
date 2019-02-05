@@ -16,6 +16,10 @@ celery = "*"
 ipython = "*"
 dicttoxml = "*"
 jupyter = "*"
+ydk = "*"
+ydk-models-ietf = "*"
+ydk-models-openconfig = "*"
+ydk-models-cisco-ios-xr = "*"
 
 [dev-packages]
 "autopep8" = "*"

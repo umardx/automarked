@@ -21,9 +21,10 @@
                             <span class="input-group-addon">
                                 <i class="material-icons">email</i>
                             </span>
-                            <div class="form-line">
-                                {{ form.email(class="form-control", placeholder="Email", required=True, autofocus=True) }}
-                            </div>
+                            {{ form.email(class="form-control", placeholder="Email", required=True, autofocus=True) }}
+                        </div>
+                        <div class="input-group">
+                            {{ form.recaptcha(class="form-control") }}
                         </div>
                         {% if form.errors %}
                             {% for field in form.errors %}
