@@ -4,6 +4,7 @@ from time import sleep
 
 @celery.task
 def reverse(msg):
+    sleep(10)
     return msg[::-1]
 
 

@@ -20,6 +20,7 @@ ydk = "*"
 ydk-models-ietf = "*"
 ydk-models-openconfig = "*"
 ydk-models-cisco-ios-xr = "*"
+flower = "*"
 
 [dev-packages]
 "autopep8" = "*"
