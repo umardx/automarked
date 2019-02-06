@@ -13,10 +13,10 @@ RUN rm -rf /usr/bin/python3 && \
     ln /usr/bin/python3.6 /usr/bin/python3 && \
     ln -fs /usr/bin/g++-5 /usr/bin/c++ && \
     ln -fs /usr/bin/gcc-5 /usr/bin/cc && \
-    pip3 install pipenv && \
     wget -q https://devhub.cisco.com/artifactory/debian-ydk/0.8.0/bionic/libydk_0.8.0-1_amd64.deb && \
     gdebi -n libydk_0.8.0-1_amd64.deb && \
-    rm -rf {,.[!.],..?}*
+    rm -rf {,.[!.],..?}* && \
+    pip3 install pipenv
 
 COPY . /app
 
