@@ -10,5 +10,5 @@ def reverse(msg):
 
 @celery.task
 def wait_sec(second):
-   sleep(second)
-   return True
+    sleep(second)
+    return True
