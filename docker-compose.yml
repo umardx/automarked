@@ -1,24 +1,50 @@
 version: '3'
 services:
-    web:
+    webapp:
         build: .
         restart: always
+        environment:
+          - C_FORCE_ROOT=True
+          - CELERY_BROKER_URL=redis://redis:6379/0
+          - CELERY_RESULT_BACKEND=redis://redis:6379/0
+          - FLASK_APP=run.py
+          - FLASK_ENV=development
         ports:
             - "8000:8000"
         volumes:
             - ./database:/app/database
+            - ./migrations:/app/migrations
+        entrypoint:
+          - ./entrypoint_app.sh
+        command:
+          - /bin/sh
         depends_on:
           - worker
           - redis
     worker:
         build: .
+        environment:
+          - C_FORCE_ROOT=True
+          - CELERY_BROKER_URL=redis://redis:6379/0
+          - CELERY_RESULT_BACKEND=redis://redis:6379/0
+        entrypoint:
+          - ./entrypoint_worker.sh
+        command:
+          - /bin/sh
         depends_on:
           - redis
     monitor:
         build: .
+        environment:
+          - C_FORCE_ROOT=True
+          - CELERY_BROKER_URL=redis://redis:6379/0
+          - CELERY_RESULT_BACKEND=redis://redis:6379/0
         ports:
           - "8001:8001"
-        entrypoint: entrypoint_flower.sh
+        entrypoint:
+          - ./entrypoint_flower.sh
+        command:
+          - /bin/sh
         depends_on:
           - redis
     redis:
