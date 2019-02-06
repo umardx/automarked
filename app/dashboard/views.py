@@ -15,7 +15,6 @@ def index():
     Handle requests to the /dashboard/ route
     Show dashboard display
     """
-    
     return render_template('dashboard/index.html', title='Dashboard')
 
 
@@ -93,10 +92,13 @@ def list_device():
 
     if action == 'refresh':
         refresh(device_id)
+        return redirect(url_for('dashboard.list_device'))
     elif action == 'refresh_all':
         refresh_all(devices)
+        return redirect(url_for('dashboard.list_device'))
     elif action == 'delete':
         delete(device_id)
+        return redirect(url_for('dashboard.list_device'))
     elif action == 'telemetry':
         pass
     elif action == 'netconf':
@@ -125,7 +127,6 @@ def refresh(id):
         )
     except Exception as e:
         flash(u'Can\'t refresh the device. ' + str(e), 'error')
-    return redirect(url_for('dashboard.list_device'))
 
 
 def refresh_all(devices):
@@ -137,7 +138,6 @@ def refresh_all(devices):
         flash(u'The device was successfully refreshed.', 'success')
     except Exception as e:
         flash(u'Can\'t refresh the device. ' + str(e), 'error')
-    return redirect(url_for('dashboard.list_device'))
 
 
 def delete(id):
@@ -150,7 +150,6 @@ def delete(id):
     except Exception as e:
         flash(u'Can\'t delete device. ' + str(e), 'error')
 
-    return redirect(url_for('dashboard.list_device'))
 
 
 def edit(device, id):
@@ -168,7 +167,6 @@ def edit(device, id):
     except Exception as e:
         flash(u'Can\'t update the device. ' + str(e), 'error')
 
-    return redirect(url_for('dashboard.list_device'))
 
 
 @dashboard.route('/device/<id>')
