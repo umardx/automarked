@@ -16,8 +16,6 @@ services:
             - ./migrations:/app/migrations
         entrypoint:
           - ./entrypoint_app.sh
-        command:
-          - /bin/sh
         depends_on:
           - worker
           - redis
@@ -29,8 +27,6 @@ services:
           - CELERY_RESULT_BACKEND=redis://redis:6379/0
         entrypoint:
           - ./entrypoint_worker.sh
-        command:
-          - /bin/sh
         depends_on:
           - redis
     monitor:
@@ -40,11 +36,9 @@ services:
           - CELERY_BROKER_URL=redis://redis:6379/0
           - CELERY_RESULT_BACKEND=redis://redis:6379/0
         ports:
-          - "8001:8001"
+          - "8080:8080"
         entrypoint:
           - ./entrypoint_flower.sh
-        command:
-          - /bin/sh
         depends_on:
           - redis
     redis:

@@ -1,10 +1,12 @@
-#!/bin/sh
+#!/bin/sh -x
+virtenv="$(pipenv --venv)/bin/activate"
+. $virtenv
 
 echo '[flask db init...]'
-pipenv run flask db init
+flask db init
 echo '[flask db migrate...]'
-pipenv run flask db migrate
+flask db migrate
 echo '[flask db upgrade...]'
-pipenv run flask db upgrade
-
-pipenv run python run.py
+flask db upgrade
+echo '[pipenv run python run.py]'
+python run.py
