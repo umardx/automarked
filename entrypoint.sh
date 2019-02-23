@@ -31,14 +31,13 @@ run_worker () {
 }
 
 
-if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
-    if [ $# -gt 0 ]; then
-        if [ "$*" = "worker" ]; then
-            run_worker
-        else
-            exec $@
-        fi
+if [ $# -gt 0 ]; then
+    if [ "$*" = "worker" ]; then
+        run_worker
     else
-        run_webapp
+        exec $@
     fi
+else
+    run_webapp
 fi
+

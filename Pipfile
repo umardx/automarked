@@ -1,12 +1,9 @@
 [packages]
+flask-socketio = "==3.1.2"
 flask ="==1.0.2"
 flask-wtf = "*"
 flask-sqlalchemy = "*"
 flask-login = "*"
-flask-migrate = "*"
-flask-socketio = "==3.1.2"
-eventlet = "*"
-ncclient = "*"
 ydk = "==0.8.1"
 ydk-models-ietf = "==0.1.5.post2"
 ydk-models-openconfig = "==0.1.6.post1"
@@ -16,12 +13,11 @@ blinker = "*"
 celery = "*"
 flower = "*"
 redis = "*"
+eventlet = "*"
 python-dotenv = "*"
 regex = "*"
-ipython = "*"
-dicttoxml = "*"
-xmltodict = "*"
 watchdog = "*"
+flask-migrate = "*"
 pyyaml = {file = "https://github.com/yaml/pyyaml/archive/4.2b2.tar.gz"}
 
 [dev-packages]
@@ -31,6 +27,3 @@ pylint = "*"
 
 [requires]
 python_version = "*"
-
-[pipenv]
-allow_prereleases = true
