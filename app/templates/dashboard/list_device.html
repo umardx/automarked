@@ -139,13 +139,13 @@
 {% endblock %}
 
 {% block addscript %}
-    <script src="{{ url_for('static', filename='js/pages/dashboard/active-list-device.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/pages/dashboard/list_device.js') }}"></script>
     <!-- Jquery DataTable Plugin Js -->
     <script src="{{ url_for('static', filename='plugins/momentjs/moment.js') }}"></script>
     <script src="{{ url_for('static', filename='plugins/momentjs/tz.js') }}"></script>
     <script src="{{ url_for('static', filename='plugins/jquery-datatable/jquery.dataTables.js') }}"></script>
     <script src="{{ url_for('static', filename='plugins/jquery-datatable/skin/bootstrap/js/dataTables.bootstrap.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/pages/dashboard/active-list-device.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/pages/dashboard/list_device.js') }}"></script>
     {% if device_id %}
     <script>getId({{ device_id }})</script>
     {% endif %}

@@ -10,9 +10,10 @@ app.app_context().push()
 
 
 if __name__ == '__main__':
-    socket_io.run(
-        app,
-        host="0.0.0.0",
-        port=8000,
-        debug=True
-    )
+    socket_io.run(app, host="0.0.0.0", port=8000, debug=True)
+
+
+# TODO
+# - Bikin route post untuk emit
+# - Tembak route dari taskqueue
+# - https://github.com/Celeo/Blog/blob/master/posts/2016/flask-flask-socketio-celery-and-redis-background-task-processing.md

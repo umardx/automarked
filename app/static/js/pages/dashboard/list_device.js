@@ -1,9 +1,15 @@
+function setIntervalAndExecute(fn, t) {
+    fn();
+    return(setInterval(fn, t));
+}
+
+
 $(function () {
     $('.list-device').DataTable({
         responsive: true,
     });
 
-    let timer = setInterval(function () {
+    setIntervalAndExecute(function () {
         let now = moment();
 
         $('checked_time').each(function(i, e) {
@@ -28,7 +34,7 @@ $(function () {
                 $(e).html('<span class="badge bg-grey">' + 'Unreachable' + '</span>');
             }
         });
-    }, 250);
+    }, 10000);
 });
 
 function getId(_device_id){

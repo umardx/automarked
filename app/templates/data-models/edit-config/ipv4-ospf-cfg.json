@@ -1,0 +1,38 @@
+{
+  "Cisco-IOS-XR-ipv4-ospf-cfg:ospf": {
+    "processes": {
+      "process": [
+        {
+          "process-name": "udx",
+          "start": [null],
+          "default-vrf": {
+            "area-addresses": {
+              "area-area-id": [
+                {
+                  "area-id": 0,
+                  "running": [null],
+                  "name-scopes": {
+                    "name-scope": [
+                      {
+                        "interface-name": "GigabitEthernet0/0/0/0",
+                        "running": [null]
+                      },
+                      {
+                        "interface-name": "GigabitEthernet0/0/0/1",
+                        "running": [null]
+                      },
+                      {
+                        "interface-name": "GigabitEthernet0/0/0/2",
+                        "running": [null]
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ]
+    }
+  }
+}

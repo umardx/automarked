@@ -1,36 +1,39 @@
 from app import celery
-from app.models import Devices
-from app import db
-from time import sleep
+from ydk.services import CodecService
+from ydk.providers import CodecServiceProvider
+from ydk.errors import YModelError, YCodecError, YCoreError
+from requests import post
+import json
+import time
 
 
-@celery.task
-def reverse(msg):
-    return msg[::-1]
-
-
-@celery.task
-def reverse_ten(msg):
-    sleep(12)
-    return msg[::-1]
-
-
-@celery.task
-def wait_sec(second):
-    sleep(second)
-    return True
-
-
-@celery.task
-def refresh_all_device(user_id):
-    devices = Devices.query.filter_by(
-        user_id=user_id
-    ).all()
-    for _device in devices:
-        _device.update_status()
+@celery.task(time_limit=5)
+def netconf(data, sid, url):
+    time.sleep(1)
+    json_provider = CodecServiceProvider(type='json')
+    codec = CodecService()
 
     try:
-        db.session.commit()
-        return True
-    except:
-        return False
+        _codec = codec.decode(json_provider,  json.dumps(data))
+        payload = json.dumps({
+            'room': sid,
+            'message': {
+                'error': None,
+                'data': {
+                    'Dummy-response': {}
+                },
+            }
+        })
+    except (RuntimeError, ValueError ,YModelError, YCodecError, YCoreError) as err:
+        _codec = None
+        payload = json.dumps({
+            'room': sid,
+            'message': {
+                'error': str(err),
+                'data': {},
+            }
+        })
+
+    res = {'request': post(url, payload), 'codec': _codec}
+    return str(res)
+

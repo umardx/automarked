@@ -1,6 +1,7 @@
 [packages]
-flask-socketio = "==3.1.2"
 flask ="==1.0.2"
+flask-migrate = "*"
+flask-socketio = "*"
 flask-wtf = "*"
 flask-sqlalchemy = "*"
 flask-login = "*"
@@ -10,15 +11,15 @@ ydk-models-openconfig = "==0.1.6.post1"
 ydk-models-cisco-ios-xr = "==6.5.1.post1"
 sentry-sdk = "*"
 blinker = "*"
-celery = "*"
-flower = "*"
 redis = "*"
+gevent = "*"
 eventlet = "*"
 python-dotenv = "*"
 regex = "*"
-watchdog = "*"
-flask-migrate = "*"
-pyyaml = {file = "https://github.com/yaml/pyyaml/archive/4.2b2.tar.gz"}
+humanize = "*"
+requests = "*"
+celery = {git = "https://github.com/celery/celery.git"}
+flower = {git = "https://github.com/mher/flower.git"}
 
 [dev-packages]
 "autopep8" = "*"
@@ -27,3 +28,6 @@ pylint = "*"
 
 [requires]
 python_version = "*"
+
+[pipenv]
+allow_prereleases = true

@@ -1408,7 +1408,7 @@
           prev,
           nextPrev,
           prevIndex,
-          isActive,
+          mark_active,
           selector = ':not(.disabled, .hidden, .dropdown-header, .divider)',
           keyCodeMap = {
             32: ' ',
@@ -1467,13 +1467,13 @@
 
       $items = $('[role=menu] li', $parent);
 
-      isActive = that.$newElement.hasClass('open');
+      mark_active = that.$newElement.hasClass('open');
 
-      if (!isActive && (e.keyCode >= 48 && e.keyCode <= 57 || e.keyCode >= 96 && e.keyCode <= 105 || e.keyCode >= 65 && e.keyCode <= 90)) {
+      if (!mark_active && (e.keyCode >= 48 && e.keyCode <= 57 || e.keyCode >= 96 && e.keyCode <= 105 || e.keyCode >= 65 && e.keyCode <= 90)) {
         if (!that.options.container) {
           that.setSize();
           that.$menu.parent().addClass('open');
-          isActive = true;
+          mark_active = true;
         } else {
           that.$button.trigger('click');
         }
@@ -1481,7 +1481,7 @@
       }
 
       if (that.options.liveSearch) {
-        if (/(^9$|27)/.test(e.keyCode.toString(10)) && isActive && that.$menu.find('.active').length === 0) {
+        if (/(^9$|27)/.test(e.keyCode.toString(10)) && mark_active && that.$menu.find('.active').length === 0) {
           e.preventDefault();
           that.$menu.parent().removeClass('open');
           if (that.options.container) that.$newElement.removeClass('open');
@@ -1583,7 +1583,7 @@
       }
 
       // Select focused option if "Enter", "Spacebar" or "Tab" (when selectOnTab is true) are pressed inside the menu.
-      if ((/(13|32)/.test(e.keyCode.toString(10)) || (/(^9$)/.test(e.keyCode.toString(10)) && that.options.selectOnTab)) && isActive) {
+      if ((/(13|32)/.test(e.keyCode.toString(10)) || (/(^9$)/.test(e.keyCode.toString(10)) && that.options.selectOnTab)) && mark_active) {
         if (!/(32)/.test(e.keyCode.toString(10))) e.preventDefault();
         if (!that.options.liveSearch) {
           var elem = $(':focus');
@@ -1601,7 +1601,7 @@
         $(document).data('keycount', 0);
       }
 
-      if ((/(^9$|27)/.test(e.keyCode.toString(10)) && isActive && (that.multiple || that.options.liveSearch)) || (/(27)/.test(e.keyCode.toString(10)) && !isActive)) {
+      if ((/(^9$|27)/.test(e.keyCode.toString(10)) && mark_active && (that.multiple || that.options.liveSearch)) || (/(27)/.test(e.keyCode.toString(10)) && !mark_active)) {
         that.$menu.parent().removeClass('open');
         if (that.options.container) that.$newElement.removeClass('open');
         that.$button.focus();

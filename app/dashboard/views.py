@@ -1,12 +1,15 @@
 from flask import flash, redirect, url_for, \
-    render_template, request, jsonify
+    render_template, request, jsonify, session
 from flask_login import login_required, current_user
+from flask_socketio import emit as s_emit
+from sqlalchemy import asc
+
+import json
 
 from app.dashboard import dashboard
 from app.dashboard.forms import add_device_form, edit_device_form
-from app.tasks import refresh_all_device
 from app import db
-from app.models import Devices
+from app.models import Devices, NetConf, YangModel
 
 
 @dashboard.route('/')
@@ -101,7 +104,8 @@ def list_device():
     elif action == 'telemetry':
         return redirect(url_for('dashboard.list_device'))
     elif action == 'netconf':
-        return redirect(url_for('dashboard.index'))
+        session['device_id'] = device_id
+        return redirect(url_for('dashboard.netconf'))
 
     return render_template(
         'dashboard/list_device.html',
@@ -131,11 +135,20 @@ def refresh(id):
 
 @login_required
 def refresh_all():
-    refresh_all_device.delay(current_user.id)
-    flash(
-        u'All devices are being refreshed.',
-        'success'
-    )
+    devices = Devices.query.filter_by(
+        user_id=current_user.id
+    ).all()
+    for _device in devices:
+        _device.update_status()
+
+    try:
+        db.session.commit()
+        return flash(
+            u'All devices are successfully refreshed.',
+            'success'
+        )
+    except Exception as err:
+        return flash(u'Can\'t refresh all device. ' + str(err), 'error')
 
 
 @login_required
@@ -146,14 +159,14 @@ def delete(id):
         db.session.delete(_device)
         db.session.commit()
         flash(u'You were successfully deleted the device.', 'success')
-    except Exception as e:
-        flash(u'Can\'t delete device. ' + str(e), 'error')
+    except Exception as err:
+        flash(u'Can\'t delete device. ' + str(err), 'error')
 
 
 @login_required
 def edit(device, id):
+    _device = Devices.query.filter_by(id=id).first()
     try:
-        _device = Devices.query.filter_by(id=id).first()
         _device.update(
             port=device.port,
             username=device.username,
@@ -168,11 +181,11 @@ def edit(device, id):
 
 
 # Endpoint for edit device
-@dashboard.route('/device/<id>')
+@dashboard.route('/device/<device_id>')
 @login_required
-def device(id):
+def device(device_id):
     data = dict()
-    _device = Devices.query.filter_by(id=id).first()
+    _device = Devices.query.filter_by(id=device_id).first()
     if _device is not None:
         data['id'] = _device.id
         data['host'] = _device.host
@@ -183,19 +196,44 @@ def device(id):
     return jsonify(data)
 
 
-# Route for netconf
-@dashboard.route('/netconf', defaults={'device_id': None})
-@dashboard.route('/netconf/<device_id>')
+# route netconf
+@dashboard.route('/netconf')
 @login_required
-def netconf(device_id):
+def netconf():
     """
     Handle requests to the /dashboard/netconf route
     Show netconf dashboard display
     """
-    if device_id is not None:
-        print(device_id)
+
+    _device_id = None
+
+    if 'device_id' in session:
+        _device_id = session['device_id']
+        _device = Devices.query.filter_by(id=_device_id).first()
+
+        session.pop('device_id', None)
 
     return render_template(
         'dashboard/netconf.html',
-        title='Network Configuration'
+        title='Network Configuration',
+        devices=Devices.query.filter_by(
+            user_id=current_user.id
+        ).order_by(asc(Devices.host)).all(),
+        device_id=_device_id,
+        operations=NetConf.support_operations(),
+        models=YangModel.support_models()
     )
+
+
+@login_required
+@dashboard.route('/netconf/emit', methods=['POST'])
+def emit():
+    try:
+        data = json.loads(request.get_data().decode("utf-8"))
+        room = data.get('room')
+        message = data.get('message')
+        s_emit('render_res', message, room=room, namespace='/nc')
+    except:
+        message = {}
+
+    return jsonify(message)

@@ -1,0 +1,96 @@
+{
+  "Cisco-IOS-XR-ifmgr-cfg:interface-configurations": {
+    "interface-configuration": [
+      {
+        "active": "act",
+        "interface-name": "MgmtEth0/RP0/CPU0/0",
+        "Cisco-IOS-XR-ipv4-io-cfg:ipv4-network": {
+          "addresses": {
+            "primary": {
+              "address": "167.205.3.51",
+              "netmask": "255.255.255.0"
+            }
+          }
+        }
+      },
+      {
+        "active": "act",
+        "interface-name": "GigabitEthernet0/0/0/0",
+        "description": "Interface 0",
+        "Cisco-IOS-XR-ipv4-io-cfg:ipv4-network": {
+          "addresses": {
+            "primary": {
+              "address": "172.18.0.1",
+              "netmask": "255.255.255.252"
+            }
+          }
+        },
+        "Cisco-IOS-XR-ipv6-ma-cfg:ipv6-network": {
+          "addresses": {
+            "regular-addresses": {
+              "regular-address": [
+                {
+                  "address": "fd00::1",
+                  "prefix-length": 128,
+                  "zone": "0"
+                }
+              ]
+            }
+          }
+        }
+      },
+      {
+        "active": "act",
+        "interface-name": "GigabitEthernet0/0/0/1",
+        "description": "Interface 1",
+        "Cisco-IOS-XR-ipv4-io-cfg:ipv4-network": {
+          "addresses": {
+            "primary": {
+              "address": "172.18.1.1",
+              "netmask": "255.255.255.0"
+            }
+          }
+        },
+        "Cisco-IOS-XR-ipv6-ma-cfg:ipv6-network": {
+          "addresses": {
+            "regular-addresses": {
+              "regular-address": [
+                {
+                  "address": "fd01::1",
+                  "prefix-length": 128,
+                  "zone": "0"
+                }
+              ]
+            }
+          }
+        }
+      },
+      {
+        "active": "act",
+        "interface-name": "GigabitEthernet0/0/0/2",
+        "description": "Interface 2",
+        "Cisco-IOS-XR-ipv4-io-cfg:ipv4-network": {
+          "addresses": {
+            "primary": {
+              "address": "172.18.3.1",
+              "netmask": "255.255.255.0"
+            }
+          }
+        },
+        "Cisco-IOS-XR-ipv6-ma-cfg:ipv6-network": {
+          "addresses": {
+            "regular-addresses": {
+              "regular-address": [
+                {
+                  "address": "fd03::1",
+                  "prefix-length": 128,
+                  "zone": "0"
+                }
+              ]
+            }
+          }
+        }
+      }
+    ]
+  }
+}

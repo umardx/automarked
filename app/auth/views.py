@@ -31,7 +31,7 @@ def signup():
 
     if request.method == 'POST' and formSignUp.validate_on_submit():
         _user = Users(
-            isActive=formSignUp.accept_tos.data,
+            mark_active=formSignUp.accept_tos.data,
             username=formSignUp.username.data,
             email=formSignUp.email.data,
             password=formSignUp.password.data
@@ -62,7 +62,7 @@ def signin():
 
     if request.method == 'POST' and formSignIn.validate_on_submit():
         _user = Users.query.filter_by(username=formSignIn.username.data).first()
-        if _user and _user.isActive and _user.check_password(formSignIn.password.data):
+        if _user and _user.mark_active and _user.check_password(formSignIn.password.data):
             login_user(_user, remember=formSignIn.remember.data)
             flash(u'You were successfully logged in, as ' + _user.username, 'success')
             return redirect(url_for('dashboard.index'))
