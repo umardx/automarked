@@ -24,6 +24,11 @@ function get_req_editor() {
     return req_editor.get();
 }
 
+function clearRequestTimeout(req_process) {
+    clearTimeout(req_process);
+    return true
+}
+
 $(function () {
     $(document).ready(function () {
         // Active netconf menu
@@ -71,7 +76,7 @@ $(function () {
             nc_io.emit('render_res', emit_data);
             $('#btnRequest').prop('disabled', true);
             $("#progress").removeClass('hidden');
-            clearTimeout(req_process).then(function () {
+            if (clearRequestTimeout()) {
                 req_process = setTimeout(function () {
                     $('#btnRequest').prop('disabled', false);
                     if(!$("#progress").hasClass('hidden')) {
@@ -79,7 +84,7 @@ $(function () {
                         $("#progress").addClass('hidden');
                     }
                 }, 10000)
-            });
+            }
         });
 
         $('#selectHost, #selectOperation, #selectModel').on('change', function () {
