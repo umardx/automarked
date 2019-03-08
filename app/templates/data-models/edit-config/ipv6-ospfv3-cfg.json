@@ -1,0 +1,38 @@
+{
+  "Cisco-IOS-XR-ipv6-ospfv3-cfg:ospfv3": {
+    "processes": {
+      "process": [
+        {
+          "process-name": "udx",
+          "enable": [null],
+          "default-vrf": {
+            "area-addresses": {
+              "area-area-id": [
+                {
+                  "area-id": 0,
+                  "enable": [null],
+                  "interfaces": {
+                    "interface": [
+                      {
+                        "interface-name": "GigabitEthernet0/0/0/0",
+                        "enable": [null]
+                      },
+                      {
+                        "interface-name": "GigabitEthernet0/0/0/1",
+                        "enable": [null]
+                      },
+                      {
+                        "interface-name": "GigabitEthernet0/0/0/2",
+                        "enable": [null]
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ]
+    }
+  }
+}

@@ -1,16 +1,135 @@
 {% extends '_dashboard.html' %}
 {% block title %} {{ title }} {% endblock %}
-
+{% block addcss %}
+    <link href="{{ url_for('static', filename='plugins/bootstrap-select/css/bootstrap-select.css') }}"
+          rel="stylesheet" type="text/css">
+    <link href="{{ url_for('static', filename='plugins/jsoneditor/jsoneditor.min.css') }}"
+          rel="stylesheet" type="text/css">
+{% endblock %}
 {% block content %}
     <section class="content">
         <div class="container-fluid">
             <div class="block-header">
-                <h2>NETCONF</h2>
+                <h2>NETCONF CONFIGURATION</h2>
             </div>
+        </div>
+        <div class="row clearfix">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="card">
+                    <div class="header">
+                        <h2>
+                            DEVICE
+                        </h2>
+                        <ul class="header-dropdown m-r--5">
+                            <li class="dropdown">
+                                <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                    <i id="onlineIndicator" class="material-icons">flash_on</i>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="body">
+                        <div class="row clearfix">
+                            <div class="col-sm-3">
+                                <select id="selectHost" class="form-control show-tick" data-live-search="true" title="Select Host">
+                                    {% for device in devices %}
+                                    <option value="{{ device.id }}" {% if (device_id) and (device.id|int == device_id|int) %} selected {% endif %}>{{ device.host }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-sm-3">
+                                <select id="selectOperation" class="form-control show-tick" title="Select Operation">
+                                    {% for key, operation in operations.items() %}
+                                    <option value="{{ key }}">{{ operation }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-sm-4">
+                                <select id="selectModel" class="form-control show-tick" title="Select Model">
+                                    {% for key, model in models.items() %}
+                                    <option value="{{ key }}">{{ model }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-sm-2">
+                                <div class="form-group">
+                                    <div class="form-inline">
+                                        <button id="btnRequest" type="button" class="btn btn-block bg-cyan btn-lg m-l-5 waves-effect" disabled>REQUEST</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="progress" class="footer hidden">
+                        <div class="progress">
+                            <div class="progress-bar progress-bar-info bg-cyan progress-bar-striped active" role="progressbar" aria-valuenow="20" aria-valuemin="0"
+                                 aria-valuemax="100" style="width: 100%">
+                                <span class="sr-only">Request in progress...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Request -->
+            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                <div class="card">
+                    <div class="header">
+                        <h2>
+                            REQUEST
+                        </h2>
+                        <ul class="header-dropdown m-r--5">
+                            <li class="dropdown">
+                                <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                    <i class="material-icons">repeat</i>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="body">
+                        <div class="row clearfix">
+                            <div class="col-md-12">
+                                <div id="request"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- #END# Request -->
+            <!-- Response -->
+            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                <div class="card">
+                    <div class="header">
+                        <h2>
+                            RESPONSE
+                        </h2>
+                        <ul class="header-dropdown m-r--5">
+                            <li class="dropdown">
+                                <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                    <i class="material-icons">repeat</i>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="body">
+                        <div class="row clearfix">
+                            <div class="col-md-12">
+                                <div id="response"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- #END# Response -->
         </div>
     </section>
 {% endblock %}
 
 {% block addscript %}
+    <!-- Select Plugin Js -->
+    <script src="{{ url_for('static', filename='plugins/bootstrap-select/js/bootstrap-select.js') }}"></script>
+    <script src="{{ url_for('static', filename='plugins/jsoneditor/jsoneditor-minimalist.min.js') }}"></script>
+    <!-- SocketIO -->
+    <script src="{{ url_for('static', filename='js/socket.io.min.js') }}"></script>
+    <!-- Netconf -->
     <script src="{{ url_for('static', filename='js/pages/dashboard/active-netconf.js') }}"></script>
 {% endblock %}

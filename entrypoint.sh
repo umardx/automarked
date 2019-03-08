@@ -14,15 +14,15 @@ run_webapp () {
     flask db migrate
     echo '[flask db upgrade...]'
     flask db upgrade
-    echo '[pipenv run python run.py]'
+    echo '[run the server]'
     python run.py
 }
 
 run_worker () {
-    pokemons="Pikachu Raichu Bulbasaur Ivysaur Venusaur Charmander Charmeleon Charizard"
+#    pokemons="Pikachu Raichu Bulbasaur Ivysaur Venusaur Charmander Charmeleon Charizard"
+    pokemons="Pikachu Raichu"
     for pokemon in ${pokemons}; do
-        watchmedo auto-restart --recursive --pattern="task.py" --directory="." -- \
-        celery worker -A run.celery --loglevel=info --concurrency=8 \
+        celery worker -A run.celery --loglevel=info \
         -n ${pokemon}@%h >> log/worker_${pokemon}.log 2>&1 &
     done
     celery -A run.celery flower \
