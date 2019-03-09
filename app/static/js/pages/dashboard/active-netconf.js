@@ -42,23 +42,27 @@ $(function () {
         // initialize network configuration socket_io
         var nc_io = io.connect(document.location.protocol+'//'+document.location.host+'/nc');
 
+        // receive message when client connected
         nc_io.on('receive', function(val) {
             console.info(JSON.stringify(val, null, 1));
         });
 
+        // do nothing when disconnected
         nc_io.on('disconnect', function(){ });
 
+        // update request editor for new value
         nc_io.on('render_req', function (val) {
             update_req_editor(val);
         });
 
+        // update response editor when received message
         nc_io.on('render_res', function (val) {
             update_res_editor(val.data);
             console.info(JSON.stringify(val, null, 1));
             if (val.error) {
                 toastr["error"](val.error.split('Error:').pop(), 'Operation failed!')
             } else {
-                toastr["success"]('Operation success!')
+                toastr["success"]('Operation success!');
             }
             $('#btnRequest').prop('disabled', false);
             if(!$("#progress").hasClass('hidden')) {
@@ -66,6 +70,7 @@ $(function () {
             }
         });
 
+        // emit request for netconf operation
         $('#btnRequest').click(function () {
             let emit_data = {
                 'device_id': $('#selectHost').val(),
@@ -76,14 +81,16 @@ $(function () {
             nc_io.emit('render_res', emit_data);
             $('#btnRequest').prop('disabled', true);
             $("#progress").removeClass('hidden');
-            if (clearRequestTimeout()) {
+            if (clearRequestTimeout(req_process)) {
                 req_process = setTimeout(function () {
                     $('#btnRequest').prop('disabled', false);
                     if(!$("#progress").hasClass('hidden')) {
-                        toastr["error"]('Operation timout!')
+                        // toast timout and clear emit buffer
+                        toastr["error"]('Operation timout!');
                         $("#progress").addClass('hidden');
+                        nc_io.sendBuffer = [];
                     }
-                }, 10000)
+                }, 8000)
             }
         });
 
