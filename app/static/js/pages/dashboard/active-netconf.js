@@ -29,6 +29,21 @@ function clearRequestTimeout(req_process) {
     return true
 }
 
+function createErrorAlert(title, message) {
+    $('.footer')
+        .append(
+            '<div class="alert alert-danger alert-dismissible" role="alert">' +
+            '<button type="button" class="close" data-dismiss="alert" aria-label="Close">' +
+            '<span aria-hidden="true">&times;</span>' +
+            '</button>' +
+            '<h4 class="alert-heading">' + title + '</h4>' +
+            '<p><span>' + message + '</span></p>' +
+            '</div>');
+    $(".alert").fadeTo(10000, 500).slideUp(500, function(){
+        $(".alert").slideUp(500);
+    });
+}
+
 $(function () {
     $(document).ready(function () {
         // Active netconf menu
@@ -60,7 +75,7 @@ $(function () {
             update_res_editor(val.data);
             console.info(JSON.stringify(val, null, 1));
             if (val.error) {
-                toastr["error"](val.error.split('Error:').pop(), 'Operation failed!')
+                createErrorAlert('An error occurred!', val.error)
             } else {
                 toastr["success"]('Operation success!');
             }
@@ -79,6 +94,8 @@ $(function () {
                 'data': get_req_editor()
             };
             nc_io.emit('render_res', emit_data);
+
+            $('.alert').remove();
             $('#btnRequest').prop('disabled', true);
             $("#progress").removeClass('hidden');
             if (clearRequestTimeout(req_process)) {
@@ -90,7 +107,7 @@ $(function () {
                         $("#progress").addClass('hidden');
                         nc_io.sendBuffer = [];
                     }
-                }, 8000)
+                }, 10000)
             }
         });
 

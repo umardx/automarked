@@ -24,7 +24,7 @@ def netconf(data, sid, url):
                 },
             }
         })
-    except (RuntimeError, ValueError, YModelError, YCodecError, YCoreError) as err:
+    except (RuntimeError, ValueError, IndexError, YModelError, YCodecError, YCoreError) as err:
         _codec = None
         payload = json.dumps({
             'room': sid,
