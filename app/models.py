@@ -8,9 +8,17 @@ from _datetime import datetime, timezone
 from humanize import naturaltime
 import socket, json
 
-from ydk.errors import YModelError, YServiceProviderError
-from ydk.services import CRUDService, CodecService
-from ydk.providers import NetconfServiceProvider, CodecServiceProvider
+from ydk.services import NetconfService
+from ydk.services import Datastore
+from ydk.providers import NetconfServiceProvider
+
+from ydk.services import CodecService
+from ydk.providers import CodecServiceProvider
+
+json_provider = CodecServiceProvider(type='json')
+xml_provider = CodecServiceProvider(type='xml')
+codec = CodecService()
+nc = NetconfService()
 
 
 class Users(UserMixin, db.Model):
@@ -193,9 +201,9 @@ class NetConf:
         self.port = port
         self.username = username
         self.password = password
-        self.provider = self.connect()
+        self.session = self.create_session()
 
-    def connect(self):
+    def create_session(self):
         return NetconfServiceProvider(
             address=self.address,
             port=self.port,
@@ -203,11 +211,30 @@ class NetConf:
             password=self.password
         )
 
-    def get_config(self, payload):
-        pass
+    # Retrieve running configuration and device state information.
+    def get(self, read_filter=[]):
+        return nc.get(provider=self.session, read_filter=read_filter)
 
-    def edit_config(self, payload):
-        pass
+    # Retrieve all or part of a specified configuration datastore.
+    def get_config(self, source=Datastore.candidate, read_filter=[]):
+        return nc.get_config(provider=self.session, source=source, read_filter=read_filter)
+
+    # Loads all or part of a specified configuration to the specified target configuration datastore.
+    # Allows new configuration to be read from local file, remote file, or inline.
+    # If the target configuration datastore does not exist, it will be created.
+    def edit_config(
+            self, target=Datastore.candidate, config=[], default_operation='replace',
+            test_option='rollback-on-error'
+    ):
+        return nc.edit_config(
+            self.session, target=target, config=config,
+            default_operation=default_operation,
+            test_option=test_option
+        )
+
+    # Delete a configuration Datastore. The RUNNING configuration Datastore cannot be deleted.
+    def delete_config(self, target=Datastore.candidate, url=''):
+        return nc.delete_config(provider=self.session, target=target, url=url)
 
     @staticmethod
     def support_operations():
