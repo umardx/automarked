@@ -48,7 +48,7 @@ def render_req(message):
 @socket_io.on('render_res', namespace='/nc')
 @authenticated_only
 def render_res(message):
-    url = url_for('dashboard.emit', _external=True)
+    url = 'http://webapp:8000/dashboard/netconf/emit'
     data = message.get('data')
     tasks.netconf.delay(data, request.sid, url)
 
