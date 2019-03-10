@@ -3,7 +3,7 @@ from wtforms import StringField, PasswordField, BooleanField
 from wtforms.fields.html5 import EmailField
 from wtforms.validators import DataRequired, ValidationError, \
     Email, Length, EqualTo, Regexp
-from app.models import Users
+from main.models import Users
 
 
 class ForgotForm(FlaskForm):

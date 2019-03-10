@@ -1,4 +1,4 @@
-from app import celery
+from main import celery
 from ydk.services import CodecService
 from ydk.providers import CodecServiceProvider
 from ydk.errors import YModelError, YCodecError, YCoreError

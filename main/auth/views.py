@@ -1,10 +1,10 @@
 from flask import flash, redirect, render_template, url_for, request
 from flask_login import login_required, login_user, logout_user, current_user
 
-from app.auth import auth
-from app.auth.forms import SignInForm, SignupForm, ForgotForm
-from app import db
-from app.models import Users
+from main.auth import auth
+from main.auth.forms import SignInForm, SignupForm, ForgotForm
+from main import db
+from main.models import Users
 
 # Logout route
 @auth.route('/signout')

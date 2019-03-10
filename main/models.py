@@ -1,11 +1,12 @@
 from flask_login import UserMixin
-from app import db, login_manager
+from main import db, login_manager
 from flask import render_template
 from flask_login import login_required, current_user
 from werkzeug.security import generate_password_hash, \
     check_password_hash
 from _datetime import datetime, timezone
 from humanize import naturaltime
+from socket import error as socket_error
 import socket
 import json
 
@@ -190,7 +191,7 @@ class DeviceStatus(UserMixin, db.Model):
             sock.connect((host, port))
             sock.shutdown(socket.SHUT_RDWR)
             return True
-        except Exception:
+        except (Exception, socket_error):
             return False
         finally:
             sock.close()

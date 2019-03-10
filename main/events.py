@@ -1,6 +1,6 @@
 import functools
-from app import socket_io, tasks
-from app.models import YangModel
+from main import socket_io, tasks
+from main.models import YangModel
 from flask import request, url_for
 from flask_login import current_user
 from flask_socketio import disconnect, emit

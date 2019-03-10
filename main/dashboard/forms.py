@@ -4,7 +4,7 @@ from wtforms import StringField, PasswordField
 from wtforms.fields.html5 import IntegerField
 from wtforms.validators import DataRequired, ValidationError, \
     Length, Regexp, NumberRange
-from app.models import Devices
+from main.models import Devices
 
 
 class add_device_form(FlaskForm):

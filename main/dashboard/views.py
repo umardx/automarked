@@ -6,10 +6,10 @@ from sqlalchemy import asc
 
 import json
 
-from app.dashboard import dashboard
-from app.dashboard.forms import add_device_form, edit_device_form
-from app import db
-from app.models import Devices, NetConf, YangModel
+from main.dashboard import dashboard
+from main.dashboard.forms import add_device_form, edit_device_form
+from main import db
+from main.models import Devices, NetConf, YangModel
 
 
 @dashboard.route('/')

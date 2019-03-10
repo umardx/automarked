@@ -5,7 +5,7 @@ This web application is development using python flask and its still in the deve
 ## Important file and folder structure after setup
 ```
 .
-├── app
+├── main
 │   ├── auth
 │   │   ├── forms.py
 │   │   ├── __init__.py
@@ -85,6 +85,6 @@ For fast and simple testing/development deployment, you can use the prepared doc
 ```sh
 $ mkdir ${PWD}/database
 $ docker run -d --name automarked \
--v ${PWD}/database:/app/database \
+-v ${PWD}/database:/main/database \
 -p 8000:8000/tcp umardx/automarked:latest
 ```
