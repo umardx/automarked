@@ -6,7 +6,8 @@ from werkzeug.security import generate_password_hash, \
     check_password_hash
 from _datetime import datetime, timezone
 from humanize import naturaltime
-import socket, json
+import socket
+import json
 
 from ydk.services import NetconfService
 from ydk.services import Datastore
@@ -189,7 +190,7 @@ class DeviceStatus(UserMixin, db.Model):
             sock.connect((host, port))
             sock.shutdown(socket.SHUT_RDWR)
             return True
-        except:
+        except Exception:
             return False
         finally:
             sock.close()
