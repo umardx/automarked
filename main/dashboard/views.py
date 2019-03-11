@@ -213,6 +213,10 @@ def netconf():
 
         session.pop('device_id', None)
 
+    if current_user.is_authenticated:
+        print('Authenticated')
+        print(current_user)
+
     return render_template(
         'dashboard/netconf.html',
         title='Network Configuration',
@@ -225,7 +229,6 @@ def netconf():
     )
 
 
-@login_required
 @dashboard.route('/netconf/emit', methods=['POST'])
 def emit():
     try:

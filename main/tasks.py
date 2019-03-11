@@ -4,12 +4,10 @@ from ydk.providers import CodecServiceProvider
 from ydk.errors import YModelError, YCodecError, YCoreError
 from requests import post
 import json
-import time
 
 
 @celery.task(time_limit=5)
 def netconf(data, sid, url):
-    time.sleep(1)
     json_provider = CodecServiceProvider(type='json')
     codec = CodecService()
 
