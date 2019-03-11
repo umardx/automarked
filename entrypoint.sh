@@ -20,13 +20,13 @@ run_webapp () {
 
 run_worker () {
 #    pokemons="Pikachu Raichu Bulbasaur Ivysaur Venusaur Charmander Charmeleon Charizard"
-    pokemons="Pikachu Raichu"
+    pokemons="Pikachu"
     for pokemon in ${pokemons}; do
-        celery worker -A run.celery --loglevel=info \
-        -n ${pokemon}@%h >> log/worker_${pokemon}.log 2>&1 &
+        celery worker -A run.celery -l info -n ${pokemon}@%h \
+        >> log/worker_${pokemon}.log 2>&1 &
     done
-    celery -A run.celery flower \
-    --logging=debug >> log/flower.log 2>&1 &
+    celery -A run.celery flower -l debug \
+    >> log/flower.log 2>&1 &
     tail -f log/worker*.log log/flower.log
 }
 

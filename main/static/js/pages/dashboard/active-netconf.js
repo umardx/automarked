@@ -1,4 +1,4 @@
-// create the editor at container1 and container2
+// Initialize container by get Element ID
 let req_container = document.getElementById("request");
 let res_container = document.getElementById("response");
 let options = {
@@ -55,7 +55,7 @@ $(function () {
         update_res_editor(res_data);
 
         // initialize network configuration socket_io
-        var nc_io = io.connect(document.location.protocol+'//'+document.location.host+'/nc');
+        var nc_io = io.connect(document.location.protocol + '//' + document.location.host + '/nc');
 
         // receive message when client connected
         nc_io.on('receive', function(val) {
