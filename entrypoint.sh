@@ -23,11 +23,11 @@ run_worker () {
     pokemons="Pikachu"
     for pokemon in ${pokemons}; do
         celery worker -A run.celery -l info -n ${pokemon}@%h \
-        >> log/worker_${pokemon}.log 2>&1 &
+        2>&1 |& tee -a log/worker.log &
     done
     celery -A run.celery flower -l debug \
-    >> log/flower.log 2>&1 &
-    tail -f log/worker*.log log/flower.log
+    2>&1 |& tee -a log/flower.log &
+    tail -f log/worker.log log/flower.log
 }
 
 
