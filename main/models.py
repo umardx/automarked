@@ -238,6 +238,7 @@ class NetConf:
     def delete_config(self, target=Datastore.candidate, url=''):
         return nc.delete_config(provider=self.session, target=target, url=url)
 
+    # Method for return supported operations
     @staticmethod
     def support_operations():
         operations = {
@@ -258,6 +259,7 @@ class YangModel:
     @staticmethod
     def support_models():
         models = {
+            'manual': 'Input-Manually',
             'ifmgr-cfg': 'Cisco-IOS-XR-ifmgr-cfg',
             'ipv4-ospf-cfg': 'Cisco-IOS-XR-ipv4-ospf-cfg',
             'ipv6-ospfv3-cfg': 'Cisco-IOS-XR-ipv6-ospfv3-cfg',
@@ -266,9 +268,13 @@ class YangModel:
         return models
 
     def get_data_model(self):
-        if self.model is not None:
+        if self.model is not None and self.model != 'manual':
             _path = 'data-models/{}/{}.json'.format(self.operation, self.model)
             data_model = json.loads(render_template(_path))
             return data_model
         else:
-            return {}
+            return {
+                "<module-name>:<container-name>": {
+                    "<leaf-name>": []
+                }
+            }

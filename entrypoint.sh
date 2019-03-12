@@ -3,6 +3,7 @@
 virtenv="$(pipenv --venv)/bin/activate"
 . $virtenv
 
+rm -rf log
 mkdir -p log
 
 run_webapp () {
