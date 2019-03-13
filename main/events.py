@@ -1,7 +1,7 @@
 import functools
 from main import socket_io, tasks
 from main.models import YangModel
-from flask import request, url_for
+from flask import request
 from flask_login import current_user
 from flask_socketio import disconnect, emit
 
@@ -48,9 +48,10 @@ def render_req(message):
 @socket_io.on('render_res', namespace='/nc')
 @authenticated_only
 def render_res(message):
-    url = 'http://webapp:8000/dashboard/netconf/emit'
-    data = message.get('data')
-    tasks.netconf.delay(data, request.sid, url)
+    message['sid'] = request.sid
+    message['url'] = 'http://webapp:8000/dashboard/netconf/emit'
+    print(message)
+    tasks.netconf.delay(message)
 
 
 @socket_io.on('disconnect', namespace='/nc')
