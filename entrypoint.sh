@@ -3,6 +3,7 @@
 virtenv="$(pipenv --venv)/bin/activate"
 . $virtenv
 
+rm -rf log
 mkdir -p log
 
 run_webapp () {
@@ -15,19 +16,20 @@ run_webapp () {
     echo '[flask db upgrade...]'
     flask db upgrade
     echo '[run the server]'
-    python run.py
+    python run.py 2>&1 |& tee -a log/webapp.log &
+    tail -f log/webapp.log
 }
 
 run_worker () {
 #    pokemons="Pikachu Raichu Bulbasaur Ivysaur Venusaur Charmander Charmeleon Charizard"
-    pokemons="Pikachu Raichu"
+    pokemons="Pikachu"
     for pokemon in ${pokemons}; do
-        celery worker -A run.celery --loglevel=info \
-        -n ${pokemon}@%h >> log/worker_${pokemon}.log 2>&1 &
+        celery worker -A run.celery -l info -n ${pokemon}@%h \
+        2>&1 |& tee -a log/worker.log &
     done
-    celery -A run.celery flower \
-    --logging=debug >> log/flower.log 2>&1 &
-    tail -f log/worker*.log log/flower.log
+    celery -A run.celery flower -l debug \
+    2>&1 |& tee -a log/flower.log &
+    tail -f log/worker.log log/flower.log
 }
 
 

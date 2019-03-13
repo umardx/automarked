@@ -1,8 +1,11 @@
-// create the editor at container1 and container2
+// Initialize container by get Element ID
 let req_container = document.getElementById("request");
 let res_container = document.getElementById("response");
 let options = {
-    mode: 'tree'
+    enableTransform: false,
+    modes: ['text', 'code', 'tree', 'form', 'view'],
+    mode: 'tree',
+    ace: ace
 };
 
 let req_editor = new JSONEditor(req_container, options);
@@ -24,6 +27,26 @@ function get_req_editor() {
     return req_editor.get();
 }
 
+function clearRequestTimeout(req_process) {
+    clearTimeout(req_process);
+    return true
+}
+
+function createErrorAlert(title, message) {
+    $('.footer')
+        .append(
+            '<div class="alert alert-danger alert-dismissible" role="alert">' +
+            '<button type="button" class="close" data-dismiss="alert" aria-label="Close">' +
+            '<span aria-hidden="true">&times;</span>' +
+            '</button>' +
+            '<h4 class="alert-heading">' + title + '</h4>' +
+            '<p><span>' + message + '</span></p>' +
+            '</div>');
+    $(".alert").fadeTo(10000, 500).slideUp(500, function(){
+        $(".alert").slideUp(500);
+    });
+}
+
 $(function () {
     $(document).ready(function () {
         // Active netconf menu
@@ -35,25 +58,31 @@ $(function () {
         update_res_editor(res_data);
 
         // initialize network configuration socket_io
-        var nc_io = io.connect(document.location.protocol+'//'+document.location.host+'/nc');
+        var nc_io = io.connect(document.location.protocol + '//' + document.location.host + '/nc');
 
+        // receive message when client connected
         nc_io.on('receive', function(val) {
             console.info(JSON.stringify(val, null, 1));
         });
 
+        // do nothing when disconnected
         nc_io.on('disconnect', function(){ });
 
+        // update request editor for new value
         nc_io.on('render_req', function (val) {
             update_req_editor(val);
         });
 
+        // update response editor when received message
         nc_io.on('render_res', function (val) {
             update_res_editor(val.data);
-            console.info(JSON.stringify(val, null, 1));
+            if (val.data) {
+                console.info(val.data);
+            }
             if (val.error) {
-                toastr["error"](val.error.split('Error:').pop(), 'Operation failed!')
+                createErrorAlert('An error occurred!', val.error)
             } else {
-                toastr["success"]('Operation success!')
+                toastr["success"]('Operation success!');
             }
             $('#btnRequest').prop('disabled', false);
             if(!$("#progress").hasClass('hidden')) {
@@ -61,25 +90,29 @@ $(function () {
             }
         });
 
+        // emit request for netconf operation
         $('#btnRequest').click(function () {
             let emit_data = {
                 'device_id': $('#selectHost').val(),
                 'operation': $('#selectOperation').val(),
-                'model': $('#selectModel').val(),
                 'data': get_req_editor()
             };
             nc_io.emit('render_res', emit_data);
+
+            $('.alert').remove();
             $('#btnRequest').prop('disabled', true);
             $("#progress").removeClass('hidden');
-            clearTimeout(req_process).then(function () {
+            if (clearRequestTimeout(req_process)) {
                 req_process = setTimeout(function () {
                     $('#btnRequest').prop('disabled', false);
                     if(!$("#progress").hasClass('hidden')) {
-                        toastr["error"]('Operation timout!')
+                        // toast timout and clear emit buffer
+                        toastr["error"]('Operation timout!');
                         $("#progress").addClass('hidden');
+                        nc_io.sendBuffer = [];
                     }
                 }, 10000)
-            });
+            }
         });
 
         $('#selectHost, #selectOperation, #selectModel').on('change', function () {

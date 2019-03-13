@@ -1,4 +1,4 @@
-# app/__init__.py
+# main/__init__.py
 
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
@@ -25,7 +25,7 @@ def create_app(config_name):
     # )
 
     app = Flask(__name__)
-    app.config.from_object('app.config_app')
+    app.config.from_object('main.config_app')
 
     db.init_app(app)
 
@@ -35,17 +35,17 @@ def create_app(config_name):
 
     migrate = Migrate(app, db)
 
-    celery.config_from_object('app.config_celery')
+    celery.config_from_object('main.config_celery')
     celery.conf.update(app.config)
 
     socket_io.init_app(app)
 
-    from app import events
-    from app import models
+    from main import events
+    from main import models
 
-    from app.home import home as _home
-    from app.auth import auth as _auth
-    from app.dashboard import dashboard as _dashboard
+    from main.home import home as _home
+    from main.auth import auth as _auth
+    from main.dashboard import dashboard as _dashboard
 
     app.register_blueprint(_home)
     app.register_blueprint(_auth, url_prefix='/auth')

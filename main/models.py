@@ -1,16 +1,21 @@
 from flask_login import UserMixin
-from app import db, login_manager
+from main import db, login_manager
 from flask import render_template
 from flask_login import login_required, current_user
 from werkzeug.security import generate_password_hash, \
     check_password_hash
 from _datetime import datetime, timezone
 from humanize import naturaltime
-import socket, json
+from socket import error as socket_error
+import socket
+import json
 
-from ydk.errors import YModelError, YServiceProviderError
-from ydk.services import CRUDService, CodecService
-from ydk.providers import NetconfServiceProvider, CodecServiceProvider
+from ydk.services import NetconfService
+from ydk.services import Datastore
+from ydk.providers import NetconfServiceProvider
+
+from ydk.services import CodecService
+from ydk.providers import CodecServiceProvider
 
 
 class Users(UserMixin, db.Model):
@@ -181,10 +186,15 @@ class DeviceStatus(UserMixin, db.Model):
             sock.connect((host, port))
             sock.shutdown(socket.SHUT_RDWR)
             return True
-        except:
+        except (Exception, socket_error):
             return False
         finally:
             sock.close()
+
+
+json_provider = CodecServiceProvider(type='json')
+codec = CodecService()
+nc = NetconfService()
 
 
 class NetConf:
@@ -193,9 +203,9 @@ class NetConf:
         self.port = port
         self.username = username
         self.password = password
-        self.provider = self.connect()
+        self.session = self.create_session()
 
-    def connect(self):
+    def create_session(self):
         return NetconfServiceProvider(
             address=self.address,
             port=self.port,
@@ -203,12 +213,21 @@ class NetConf:
             password=self.password
         )
 
-    def get_config(self, payload):
-        pass
+    def get(self, read_filter=[]):
+        return nc.get(provider=self.session, read_filter=read_filter)
 
-    def edit_config(self, payload):
-        pass
+    def get_config(self, source=Datastore.candidate, read_filter=[]):
+        return nc.get_config(provider=self.session, source=source, read_filter=read_filter)
 
+    def edit_config(self, target=Datastore.candidate, config=[],
+                    default_operation='replace'):
+        return nc.edit_config(provider=self.session, target=target, config=config,
+                              default_operation=default_operation)
+
+    def commit(self):
+        return nc.commit(provider=self.session)
+
+    # Method for return supported operations
     @staticmethod
     def support_operations():
         operations = {
@@ -229,6 +248,7 @@ class YangModel:
     @staticmethod
     def support_models():
         models = {
+            'manual': 'Input-Manually',
             'ifmgr-cfg': 'Cisco-IOS-XR-ifmgr-cfg',
             'ipv4-ospf-cfg': 'Cisco-IOS-XR-ipv4-ospf-cfg',
             'ipv6-ospfv3-cfg': 'Cisco-IOS-XR-ipv6-ospfv3-cfg',
@@ -237,9 +257,13 @@ class YangModel:
         return models
 
     def get_data_model(self):
-        if self.model is not None:
+        if self.model is not None and self.model != 'manual':
             _path = 'data-models/{}/{}.json'.format(self.operation, self.model)
             data_model = json.loads(render_template(_path))
             return data_model
         else:
-            return {}
+            return {
+                "<module-name>:<container-name>": {
+                    "<leaf-name>": []
+                }
+            }

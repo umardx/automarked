@@ -22,7 +22,7 @@ RUN apt-get update -qq \
     && useradd -ms /bin/bash automarked \
     && chown -R automarked:automarked . \
     && curl -sL https://bootstrap.pypa.io/get-pip.py | python \
-    && pip install git+https://github.com/pypa/pipenv.git \
+    && pip install pipenv \
     && rm -rf /var/lib/apt/lists/*
 
 USER automarked
