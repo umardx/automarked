@@ -16,7 +16,8 @@ run_webapp () {
     echo '[flask db upgrade...]'
     flask db upgrade
     echo '[run the server]'
-    python run.py
+    python run.py 2>&1 |& tee -a log/webapp.log &
+    tail -f log/webapp.log
 }
 
 run_worker () {
