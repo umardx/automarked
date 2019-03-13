@@ -17,11 +17,6 @@ from ydk.providers import NetconfServiceProvider
 from ydk.services import CodecService
 from ydk.providers import CodecServiceProvider
 
-json_provider = CodecServiceProvider(type='json')
-xml_provider = CodecServiceProvider(type='xml')
-codec = CodecService()
-nc = NetconfService()
-
 
 class Users(UserMixin, db.Model):
     """
@@ -197,6 +192,11 @@ class DeviceStatus(UserMixin, db.Model):
             sock.close()
 
 
+json_provider = CodecServiceProvider(type='json')
+codec = CodecService()
+nc = NetconfService()
+
+
 class NetConf:
     def __init__(self, address, port, username, password):
         self.address = address
@@ -213,30 +213,19 @@ class NetConf:
             password=self.password
         )
 
-    # Retrieve running configuration and device state information.
     def get(self, read_filter=[]):
         return nc.get(provider=self.session, read_filter=read_filter)
 
-    # Retrieve all or part of a specified configuration datastore.
     def get_config(self, source=Datastore.candidate, read_filter=[]):
         return nc.get_config(provider=self.session, source=source, read_filter=read_filter)
 
-    # Loads all or part of a specified configuration to the specified target configuration datastore.
-    # Allows new configuration to be read from local file, remote file, or inline.
-    # If the target configuration datastore does not exist, it will be created.
-    def edit_config(
-            self, target=Datastore.candidate, config=[], default_operation='replace',
-            test_option='rollback-on-error'
-    ):
-        return nc.edit_config(
-            self.session, target=target, config=config,
-            default_operation=default_operation,
-            test_option=test_option
-        )
+    def edit_config(self, target=Datastore.candidate, config=[],
+                    default_operation='replace'):
+        return nc.edit_config(provider=self.session, target=target, config=config,
+                              default_operation=default_operation)
 
-    # Delete a configuration Datastore. The RUNNING configuration Datastore cannot be deleted.
-    def delete_config(self, target=Datastore.candidate, url=''):
-        return nc.delete_config(provider=self.session, target=target, url=url)
+    def commit(self):
+        return nc.commit(provider=self.session)
 
     # Method for return supported operations
     @staticmethod
