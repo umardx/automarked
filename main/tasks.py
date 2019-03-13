@@ -9,7 +9,8 @@ import json
 json_provider = CodecServiceProvider(type='json')
 codec = CodecService()
 
-@celery.task(time_limit=5)
+
+@celery.task(time_limit=10)
 def netconf(message):
     data = message.get('data')
     json_data = [json.dumps({k:v}) for k, v in data.items()]
