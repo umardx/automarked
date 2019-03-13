@@ -2,7 +2,10 @@
 let req_container = document.getElementById("request");
 let res_container = document.getElementById("response");
 let options = {
-    mode: 'tree'
+    enableTransform: false,
+    modes: ['text', 'code', 'tree', 'form', 'view'],
+    mode: 'tree',
+    ace: ace
 };
 
 let req_editor = new JSONEditor(req_container, options);
@@ -73,7 +76,9 @@ $(function () {
         // update response editor when received message
         nc_io.on('render_res', function (val) {
             update_res_editor(val.data);
-            console.info(JSON.stringify(val, null, 1));
+            if (val.data) {
+                console.info(val.data);
+            }
             if (val.error) {
                 createErrorAlert('An error occurred!', val.error)
             } else {
@@ -90,7 +95,6 @@ $(function () {
             let emit_data = {
                 'device_id': $('#selectHost').val(),
                 'operation': $('#selectOperation').val(),
-                'model': $('#selectModel').val(),
                 'data': get_req_editor()
             };
             nc_io.emit('render_res', emit_data);
