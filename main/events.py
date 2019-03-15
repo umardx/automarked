@@ -50,8 +50,7 @@ def render_req(message):
 def render_res(message):
     message['sid'] = request.sid
     message['url'] = 'http://webapp:8000/dashboard/netconf/emit'
-    print(message)
-    tasks.netconf.delay(message)
+    tasks.net_conf.delay(message)
 
 
 @socket_io.on('disconnect', namespace='/nc')

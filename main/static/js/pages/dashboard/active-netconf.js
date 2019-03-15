@@ -111,7 +111,7 @@ $(function () {
                         $("#progress").addClass('hidden');
                         nc_io.sendBuffer = [];
                     }
-                }, 10000)
+                }, 15000)
             }
         });
 

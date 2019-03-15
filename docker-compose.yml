@@ -16,6 +16,7 @@ services:
         depends_on:
           - worker
           - redis
+        network_mode: host
     worker:
         build: .
         hostname: "worker"
@@ -31,10 +32,12 @@ services:
         command: [ "worker" ]
         depends_on:
           - redis
+        network_mode: host
     redis:
-      image: redis
-      ports:
-        - "127.0.0.1:6379:6379"
-      command: redis-server --requirepass Th3R34lP4ssw0rd
-      sysctls:
-        - net.core.somaxconn=512
+        image: redis
+        ports:
+          - "127.0.0.1:6379:6379"
+        command: redis-server --requirepass Th3R34lP4ssw0rd
+        sysctls:
+          - net.core.somaxconn=512
+        network_mode: host
