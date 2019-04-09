@@ -23,9 +23,9 @@ services:
         environment:
           - CELERY_BROKER_URL=redis://:Th3R34lP4ssw0rd@redis:6379/0
           - CELERY_RESULT_BACKEND=redis://:Th3R34lP4ssw0rd@redis:6379/1
-          - FLOWER_PORT=8888
+          - FLOWER_PORT=5555
         ports:
-          - "8888:8888"
+          - "5555:5555"
         volumes:
           - ./:/app
         user: automarked
