@@ -20,6 +20,8 @@ humanize = "*"
 requests = "*"
 celery = {git = "https://github.com/celery/celery.git"}
 flower = {git = "https://github.com/mher/flower.git"}
+werkzeug = ">=0.15.3"
+python-engineio = ">=3.9.0"
 
 [dev-packages]
 "autopep8" = "*"
